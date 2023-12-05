@@ -126,7 +126,6 @@
 
         # Local modules
         colors = import ./modules/home/colors;
-        programs-neovim-extras = import ./modules/home/programs/neovim/extras.nix;
         programs-kitty-extras = import ./modules/home/programs/kitty/extras.nix;
         home-user-info = { lib, ... }: {
           options.home.user-info =
