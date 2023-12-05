@@ -101,11 +101,11 @@
       # Modules -------------------------------------------------------------------------------- {{{
 
       darwinModules = {
-        # My configurations
-       bootstrap = import ./darwin/bootstrap.nix;
-       defaults = import ./darwin/defaults.nix;
-       general = import ./darwin/general.nix;
-       homebrew = import ./darwin/homebrew.nix;
+       # My configurations
+       my-bootstrap = import ./darwin/bootstrap.nix;
+       my-defaults = import ./darwin/defaults.nix;
+       my-general = import ./darwin/general.nix;
+       my-homebrew = import ./darwin/homebrew.nix;
 
         # Local modules
         users-primaryUser = import ./modules/darwin/users.nix;
@@ -113,19 +113,18 @@
 
       homeManagerModules = {
         # My configurations
-       colors = import ./home/colors.nix;
-       config-files = import ./home/config-files.nix;
-       fish = import ./home/fish.nix;
-       git = import ./home/git.nix;
-       git-aliases = import ./home/git-aliases.nix;
-       gh-aliases = import ./home/gh-aliases.nix;
-       kitty = import ./home/kitty.nix;
-       neovim = import ./home/neovim.nix;
-       packages = import ./home/packages.nix;
-       starship = import ./home/starship.nix;
-       starship-symbols = import ./home/starship-symbols.nix;
+       my-colors = import ./home/colors.nix;
+       my-config-files = import ./home/config-files.nix;
+       my-fish = import ./home/fish.nix;
+       my-git = import ./home/git.nix;
+       my-git-aliases = import ./home/git-aliases.nix;
+       my-gh-aliases = import ./home/gh-aliases.nix;
+       my-kitty = import ./home/kitty.nix;
+       my-packages = import ./home/packages.nix;
+       my-starship = import ./home/starship.nix;
+       my-starship-symbols = import ./home/starship-symbols.nix;
 
-        # Modules I've created
+        # Local modules
         colors = import ./modules/home/colors;
         programs-neovim-extras = import ./modules/home/programs/neovim/extras.nix;
         programs-kitty-extras = import ./modules/home/programs/kitty/extras.nix;
