@@ -39,8 +39,6 @@ jobs:
         # Create /run directory
         echo -e "run\tprivate/var/run" | sudo tee -a /etc/synthetic.conf >/dev/null
         /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t &>/dev/null || true
-        # Prevent conflict between Cachix installed by workflow and the one installed in the config
-        nix-env --set-flag priority 1 cachix
         # Build and switch to config
         nix build .#darwinConfigurations.githubCI.system
         ./result/sw/bin/darwin-rebuild switch --flake .#githubCI
@@ -71,7 +69,5 @@ jobs:
 
     - name: Build and switch to home-manager env
       run: |
-        # Prevent conflict between Cachix installed by workflow and the one installed in the config
-        nix-env --set-flag priority 1 cachix
         # Build and switch to home-manager env
         nix build .#homeConfigurations.runner.activationPackage; ./result/activate
