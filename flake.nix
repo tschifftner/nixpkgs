@@ -1,3 +1,4 @@
+# flake.nix
 {
   description = "Tobias` Nix system configs, and some other useful stuff.";
 
@@ -39,10 +40,10 @@
         ] ++ singleton (
           final: prev: (optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
             # Sub in x86 version of packages that don't build on Apple Silicon.
-            inherit (final.pkgs-x86)
-              # agda
-              # idris2
-              ;
+            # inherit (final.pkgs-x86)
+            #   agda
+            #   idris2
+            #   ;
           }) // {
             # Add other overlays here if needed.
           }
@@ -92,20 +93,18 @@
             inherit (nixpkgsDefaults) config;
           };
         };
-        tweaks = _: _: {
-          # Add temporary overrides here
-        };
+
       };
       # }}}
 
       # Modules -------------------------------------------------------------------------------- {{{
 
       darwinModules = {
-       # My configurations
-       my-bootstrap = import ./darwin/bootstrap.nix;
-       my-defaults = import ./darwin/defaults.nix;
-       my-general = import ./darwin/general.nix;
-       my-homebrew = import ./darwin/homebrew.nix;
+        # My configurations
+        my-bootstrap = import ./darwin/bootstrap.nix;
+        my-defaults = import ./darwin/defaults.nix;
+        my-general = import ./darwin/general.nix;
+        my-homebrew = import ./darwin/homebrew.nix;
 
         # Local modules
         users-primaryUser = import ./modules/darwin/users.nix;
@@ -113,16 +112,16 @@
 
       homeManagerModules = {
         # My configurations
-       my-colors = import ./home/colors.nix;
-       my-config-files = import ./home/config-files.nix;
-       my-fish = import ./home/fish.nix;
-       my-git = import ./home/git.nix;
-       my-git-aliases = import ./home/git-aliases.nix;
-       my-gh-aliases = import ./home/gh-aliases.nix;
-       my-kitty = import ./home/kitty.nix;
-       my-packages = import ./home/packages.nix;
-       my-starship = import ./home/starship.nix;
-       my-starship-symbols = import ./home/starship-symbols.nix;
+        my-colors = import ./home/colors.nix;
+        my-config-files = import ./home/config-files.nix;
+        my-fish = import ./home/fish.nix;
+        my-git = import ./home/git.nix;
+        my-git-aliases = import ./home/git-aliases.nix;
+        my-gh-aliases = import ./home/gh-aliases.nix;
+        my-kitty = import ./home/kitty.nix;
+        my-packages = import ./home/packages.nix;
+        my-starship = import ./home/starship.nix;
+        my-starship-symbols = import ./home/starship-symbols.nix;
 
         # Local modules
         colors = import ./modules/home/colors;
