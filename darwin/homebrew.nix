@@ -78,7 +78,6 @@ in
     "raycast"
     "transmit"
     "visual-studio-code"
-    "helm"
     "devtoys"
     "moneymoney"
     "obsidian"

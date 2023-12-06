@@ -69,7 +69,7 @@
     inherit (pkgs)
       k9s
       kustomize
-      helm
+      kubernetes-helm
       kubectx
     ;
 
