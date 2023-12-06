@@ -10,7 +10,7 @@ on:
     - '**'
     - '!**.md'
   schedule:
-    - cron: '* */15 * * *' # Every Sunday at midnight UTC
+    - cron: '0 * * * *' # Every Sunday at midnight UTC
 
 jobs:
 
