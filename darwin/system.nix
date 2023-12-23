@@ -1,11 +1,16 @@
 {
   system.defaults.NSGlobalDomain = {
-    "com.apple.trackpad.scaling" = 3.0;
-    AppleInterfaceStyleSwitchesAutomatically = true;
+    "com.apple.trackpad.scaling" = 5.0;
+    AppleFontSmoothing = 1;
+    AppleInterfaceStyle = "Dark";
+    AppleInterfaceStyleSwitchesAutomatically = false;
+    AppleICUForce24HourTime = true;
     AppleMeasurementUnits = "Centimeters";
     AppleMetricUnits = 1;
     AppleShowScrollBars = "Automatic";
     AppleTemperatureUnit = "Celsius";
+    AppleShowAllFiles = true;
+    AppleShowAllExtensions = true;
     InitialKeyRepeat = 15;
     KeyRepeat = 2;
     NSAutomaticCapitalizationEnabled = false;
@@ -53,5 +58,19 @@
   # Finder
   system.defaults.finder = {
     FXEnableExtensionChangeWarning = true;
+    AppleShowAllExtensions = true;
+    AppleShowAllFiles = true;
+    CreateDesktop = false;
+    FXDefaultSearchScope = "SCcf";
+    FXPreferredViewStyle = "Nlsv";
+    ShowPathbar = true;
+    ShowStatusBar = true;
   };
+
+  system.defaults.menuExtraClock.Show24Hour = true;
+  system.defaults.menuExtraClock.ShowAMPM = false;
+
+  system.defaults.screencapture.location = "/Users/ts/Library/Mobile Documents/com~apple~CloudDocs/Screenshots";
+
+  time.timeZone = "Europe/Berlin";
 }

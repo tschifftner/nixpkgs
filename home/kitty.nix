@@ -1,60 +1,38 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  # Kitty terminal
-  # https://sw.kovidgoyal.net/kitty/conf.html
-  # https://rycee.gitlab.io/home-manager/options.html#opt-programs.kitty.enable
-  programs.kitty.enable = true;
-
-  # General config ----------------------------------------------------------------------------- {{{
-
-  programs.kitty.settings = {
-    # https://fsd.it/shop/fonts/pragmatapro/
-    font_family = "PragmataPro Mono Liga";
-    font_size = "14.0";
-    adjust_line_height = "140%";
-    disable_ligatures = "cursor"; # disable ligatures when cursor is on them
-
-    # Window layout
-    hide_window_decorations = "titlebar-only";
-    window_padding_width = "10";
-
-    # Tab bar
-    tab_bar_edge = "top";
-    tab_bar_style = "powerline";
-    tab_title_template = "Tab {index}: {title}";
-    active_tab_font_style = "bold";
-    inactive_tab_font_style = "normal";
-    tab_activity_symbol = "";
-  };
-
-  # Change the style of italic font variants
-  programs.kitty.extraConfig = ''
-    font_features PragmataProMonoLiga-Italic +ss06
-    font_features PragmataProMonoLiga-BoldItalic +ss07
-    modify_font underline_thickness 400%
-    modify_font underline_position 2
-  '';
-
-  programs.kitty.extras.useSymbolsFromNerdFont = "JetBrainsMono Nerd Font";
-  # }}}
-
-  # Colors config ------------------------------------------------------------------------------ {{{
-  programs.kitty.extras.colors = {
+  programs.kitty = {
     enable = true;
+    theme = "GitHub Dark Dimmed";
+    font.name = "JetBrainsMono";
+    environment = { "LS_COLORS" = "1"; };
+    shellIntegration = {
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableZshIntegration = true;
+    };
 
-    # Background dependent colors
-    dark = config.colors.solarized-dark.pkgThemes.kitty;
-    light = config.colors.solarized-light.pkgThemes.kitty;
-  };
+    settings = {
+      allow_remote_control = "yes";
+      scrollback_lines = 10000;
+      enable_audio_bell = false;
+      update_check_interval = 0;
+      term = "xterm-256color";
+      tab_bar_style = "powerline";
+      tab_font_size = "14.0";
+      active_tab_background = "#d18616";
+      active_tab_foreground = "#202020";
+      inactive_tab_background = "#2d333b";
+      inactive_tab_foreground = "#adbac7";
+      tab_bar_margin_color = "#22272e";
+      tab_bar_background = "#2d333b";
+      tab_bar_edge = "top";
+      tab_bar_margin_height = "1.0 3.0";
+      tab_title_max_length = "35";
 
-  programs.fish.functions.set-term-colors = {
-    body = "term-background $term_background";
-    onVariable = "term_background";
+      window_margin_width = "3.0";
+      enabled_layouts = "all";
+      copy_on_select = "true";
+    };
   };
-  programs.fish.interactiveShellInit = ''
-    # Set term colors based on value of `$term_backdround` when shell starts up.
-    set-term-colors
-  '';
-  # }}}
 }

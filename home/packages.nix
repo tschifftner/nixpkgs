@@ -5,9 +5,7 @@
   # https://github.com/sharkdp/bat
   # https://rycee.gitlab.io/home-manager/options.html#opt-programs.bat.enable
   programs.bat.enable = true;
-  programs.bat.config = {
-    style = "plain";
-  };
+  programs.bat.config = { style = "plain"; };
 
   # Direnv, load and unload environment variables depending on the current directory.
   # https://direnv.net
@@ -15,16 +13,84 @@
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
 
+  # Save history in a sqlite database
+  programs.atuin = {
+    enable = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
+    enableBashIntegration = true;
+    settings = {
+      compact = "compact";
+      enter_accept = "true"; # immediately executing a command
+      auto_sync = true;
+      sync_frequency = "5m";
+      workspaces = true;
+      update_check = false;
+      history_filter = [ "^.." "^cd " "^ls" "cd" "exit" ":q" ];
+    };
+  };
+
+  # Improved ls tool
+  programs.lsd.enable = true;
+  programs.lsd.enableAliases = true;
+  programs.lsd.settings = {
+    date = "relative";
+    ignore-globs = [ ".git" ".hg" ];
+  };
+
   # Htop
   # https://rycee.gitlab.io/home-manager/options.html#opt-programs.htop.enable
   programs.htop.enable = true;
   programs.htop.settings.show_program_path = true;
 
+  programs.btop.enable = true;
+
+  programs.fzf = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+    enableZshIntegration = true;
+  };
+
+  programs.less.enable = true;
+  programs.ripgrep.enable = true;
+  programs.tealdeer.enable = true;
+  programs.thefuck.enable = true;
+  programs.jq.enable = true;
+
+  programs.k9s = {
+    enable = true;
+    skin = { k9s = { body = { fgColor = "dodgerblue"; }; }; };
+    views = {
+      k9s = {
+        views = {
+          "v1/pods" = {
+            columns = [ "AGE" "NAMESPACE" "NAME" "IP" "NODE" "STATUS" "READY" ];
+          };
+        };
+      };
+
+    };
+    plugin = {
+      # Defines a plugin to provide a `ctrl-l` shortcut to  
+      # tail the logs while in pod view.  
+      fred = {
+        shortCut = "Ctrl-L";
+        description = "Pod logs";
+        scopes = [ "po" ];
+        command = "kubectl";
+        background = false;
+        args = [ "logs" "-f" "$NAME" "-n" "$NAMESPACE" "--context" "$CLUSTER" ];
+      };
+    };
+  };
+
   # SSH
   # https://nix-community.github.io/home-manager/options.html#opt-programs.ssh.enable
   # Some options also set in `../darwin/homebrew.nix`.
   programs.ssh.enable = true;
-  programs.ssh.controlPath = "~/.ssh/%C"; # ensures the path is unique but also fixed length
+  # ensures the path is unique but also fixed length
+  programs.ssh.controlPath = "~/.ssh/%C";
 
   # Zoxide, a faster way to navigate the filesystem
   # https://github.com/ajeetdsouza/zoxide
@@ -32,52 +98,32 @@
   programs.zoxide.enable = true;
 
   home.packages = lib.attrValues ({
-    # Some basics
+    # Some cli basics
     inherit (pkgs)
-      abduco # lightweight session management
       bandwhich # display current network utilization by process
-      coreutils
-      curl
+      coreutils # The GNU Core Utilities
+      curl # Transferring files with URL syntax
       du-dust # fancy version of `du`
-      eza # fancy version of `ls`
       fd # fancy version of `find`
-      htop # fancy version of `top`
-      hyperfine # benchmarking tool
       mosh # wrapper for `ssh` that better and not dropping connections
-      parallel # runs commands in parallel
-      ripgrep # better version of `grep`
-      tealdeer # rust implementation of `tldr`
-      thefuck
       unrar # extract RAR archives
       upterm # secure terminal sharing
-      wget
+      wget2 # Faster than wget
       xz # extract XZ archives
     ;
 
     # Dev stuff
     inherit (pkgs)
       cloc # source code line counter
-      github-copilot-cli
-      jq
-      nodejs
-      s3cmd
-      typescript
-      yq
-    ;
+      github-copilot-cli nodejs s3cmd typescript yq shfmt;
 
     # Kubernetes stuff
-    inherit (pkgs)
-      k9s
-      kustomize
-      kubernetes-helm
-      kubectx
-    ;
+    inherit (pkgs) kustomize kubernetes-helm kubectl kubectx;
 
     # Useful nix related tools
     inherit (pkgs)
       cachix # adding/managing alternative binary caches hosted by Cachix
       comma # run software from without installing it
-      # niv # easy dependency management for nix projects
       nix-output-monitor # get additional information while building packages
       nix-tree # interactively browse dependency graphs of Nix derivations
       nix-update # swiss-knife for updating nix packages
@@ -87,9 +133,7 @@
     ;
 
   } // lib.optionalAttrs pkgs.stdenv.isDarwin {
-    inherit (pkgs)
-      m-cli # useful macOS CLI commands
-      prefmanager # tool for working with macOS defaults
+    inherit (pkgs) m-cli # useful macOS CLI commands
     ;
   });
 }

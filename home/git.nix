@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Git
@@ -11,17 +11,15 @@
     pull.rebase = true;
   };
 
-  programs.git.ignores = [
-    ".DS_Store"
-    ".tmp"
-  ];
+  programs.git.ignores = [ ".DS_Store" ".tmp" ];
 
-  programs.git.userEmail = config.home.user-info.email;
-  programs.git.userName = config.home.user-info.fullName;
+  programs.git.userEmail = "tobias" + "@" + "schifftner.de";
+  programs.git.userName = "Tobias Schifftner";
 
   # Enhanced diffs
-  programs.git.delta.enable = true;
-
+  programs.git.diff-so-fancy.enable = true;
+  programs.git.diff-so-fancy.changeHunkIndicators = true;
+  programs.git.diff-so-fancy.markEmptyLines = true;
 
   # GitHub CLI
   # https://rycee.gitlab.io/home-manager/options.html#opt-programs.gh.enable

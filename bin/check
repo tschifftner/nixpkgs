@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Check if nix-darwin is installed
+if command -v darwin-rebuild >/dev/null 2>&1; then
+    git add .
+    echo "darwin-rebuild check --flake . $*"
+    darwin-rebuild check --flake . "$@"
+else
+    # Command to execute if nix-darwin is not installed
+    echo "darwin-rebuild is not yet installed, run bin/apply first"
+fi
