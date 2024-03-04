@@ -28,6 +28,7 @@
       update_check = false;
       history_filter = [ "^.." "^cd " "^ls" "cd" "exit" ":q" ];
     };
+    flags = [ "--disable-up-arrow" ];
   };
 
   # Improved ls tool
@@ -114,7 +115,7 @@
     # Dev stuff
     inherit (pkgs)
       cloc # source code line counter
-      github-copilot-cli nodejs s3cmd typescript yq shfmt;
+      github-copilot-cli nodejs s3cmd typescript yq shfmt colima docker;
 
     # Kubernetes stuff
     inherit (pkgs) kustomize kubernetes-helm kubectl kubectx;

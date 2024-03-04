@@ -82,8 +82,7 @@ in {
           "op run -- nixpkgs-review";
       };
       home.sessionVariables = {
-        GITHUB_TOKEN =
-          "op://Private/github.com/Sicherheit/Personal Access Token";
+        GITHUB_TOKEN = "op://Private/d4kwckaojdngif365gyhukyfre/CLI/token";
         OP_SESSION_TIMEOUT = "1800";
       };
     };
