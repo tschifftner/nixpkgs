@@ -60,7 +60,7 @@
 
   programs.k9s = {
     enable = true;
-    skin = { k9s = { body = { fgColor = "dodgerblue"; }; }; };
+    skins = { default = { k9s = { body = { fgColor = "dodgerblue"; }; }; }; };
     views = {
       k9s = {
         views = {
@@ -69,7 +69,6 @@
           };
         };
       };
-
     };
     plugin = {
       # Defines a plugin to provide a `ctrl-l` shortcut to  
