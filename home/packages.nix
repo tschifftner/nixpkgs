@@ -115,7 +115,8 @@
     # Dev stuff
     inherit (pkgs)
       cloc # source code line counter
-      github-copilot-cli nodejs s3cmd typescript yq shfmt colima docker;
+      github-copilot-cli nodejs s3cmd typescript yq shfmt colima docker
+      docker-compose;
 
     # Kubernetes stuff
     inherit (pkgs) kustomize kubernetes-helm kubectl kubectx;

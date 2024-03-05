@@ -32,13 +32,19 @@
     autohide = true;
     expose-group-by-app = false;
     mru-spaces = false;
-    tilesize = 128;
+    tilesize = 48;
     # Disable all hot corners
     wvous-bl-corner = 1;
     wvous-br-corner = 1;
     wvous-tl-corner = 1;
     wvous-tr-corner = 1;
   };
+
+  # Dock Apps
+  system.defaults.dock.persistent-apps = [
+    "/System/Library/CoreServices/Finder.app"
+    "/System/Applications/Launchpad.app"
+  ];
 
   # Login and lock screen
   system.defaults.loginwindow = {
@@ -65,12 +71,14 @@
     FXPreferredViewStyle = "Nlsv";
     ShowPathbar = true;
     ShowStatusBar = true;
+    QuitMenuItem = true;
   };
 
   system.defaults.menuExtraClock.Show24Hour = true;
   system.defaults.menuExtraClock.ShowAMPM = false;
 
-  system.defaults.screencapture.location = "/Users/ts/Library/Mobile Documents/com~apple~CloudDocs/Screenshots";
+  system.defaults.screencapture.location =
+    "/Users/ts/Library/Mobile Documents/com~apple~CloudDocs/Screenshots";
 
   time.timeZone = "Europe/Berlin";
 }
