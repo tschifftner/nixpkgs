@@ -77,12 +77,14 @@ in {
       '';
       home.shellAliases = {
         # cachix = mkIf (elem pkgs.cachix homePackages) "op plugin run -- cachix";
-        gh = mkIf (elem pkgs.gh homePackages) "op plugin run -- gh";
+        gh =
+          mkIf (elem pkgs.gh homePackages) "op plugin run --account my -- gh";
         nixpkgs-review = mkIf (elem pkgs.nixpkgs-review homePackages)
           "op run -- nixpkgs-review";
       };
       home.sessionVariables = {
-        GITHUB_TOKEN = "op://Private/d4kwckaojdngif365gyhukyfre/CLI/token";
+        #GITHUB_TOKEN = "op://Private/d4kwckaojdngif365gyhukyfre/CLI/token";
+        #GITHUB_TOKEN = "op read op://Private/d4kwckaojdngif365gyhukyfre/CLI/token --account my";
         OP_SESSION_TIMEOUT = "1800";
       };
     };
