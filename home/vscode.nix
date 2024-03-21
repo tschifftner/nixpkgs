@@ -47,6 +47,24 @@
         foxundermoon.shell-format
         timonwong.shellcheck
 
+        # Rest
+        humao.rest-client
+
+        # Python dev
+        ms-python.black-formatter
+        ms-python.python
+        ms-python.vscode-pylance
+
+        ms-toolsai.jupyter
+        ms-toolsai.vscode-jupyter-slideshow
+        ms-toolsai.jupyter-renderers
+        ms-toolsai.jupyter-keymap
+        ms-toolsai.vscode-jupyter-cell-tags
+
+        # RPA
+        #robocorp.robocorp-code
+        #robocorp.robotframework-lsp
+
       ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         {
           name = "remote-ssh-edit";
@@ -86,6 +104,7 @@
           version = "1.8.0";
           sha256 = "sha256-W2WlngFC5pAAjkj4lQNR5yPJZiedkjqGZHldjx8m7IU=";
         }
+
       ];
 
     userSettings = {

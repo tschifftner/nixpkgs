@@ -8,7 +8,7 @@
     history.size = 10000;
     history.path = "${config.home.homeDirectory}/zsh/history";
 
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     enableCompletion = true;
 
     plugins = [

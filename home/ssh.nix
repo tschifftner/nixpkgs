@@ -5,6 +5,7 @@ let
   inherit (builtins) readFile;
 
   ambimaxPubKey = readFile ./ssh/ambimax-hetzner-cloud.pub;
+  githubPubKey = readFile ./ssh/github.pub;
   tsVpnKey = readFile ./ssh/ts-vpn.key;
 in {
   programs.ssh.extraConfig = "Include config.d/*";
@@ -20,6 +21,12 @@ in {
     Host ts-vpn ts-proxy
         HostName 49.12.75.12
         IdentityFile ${writeText "ts-vpn.key" tsVpnKey}
+
+    Host github.com
+        HostName github.com
+        User git
+        IdentityFile ${writeText "github.pub" githubPubKey}
+        IdentitiesOnly yes
 
     Host nixos
         HostName 78.47.137.218

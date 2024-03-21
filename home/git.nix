@@ -9,6 +9,8 @@
   programs.git.extraConfig = {
     diff.colorMoved = "default";
     pull.rebase = true;
+    init = { defaultBranch = "main"; };
+    push.autoSetupRemote = true;
   };
 
   programs.git.ignores = [ ".DS_Store" ".tmp" ];
