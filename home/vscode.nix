@@ -51,9 +51,9 @@
         humao.rest-client
 
         # Python dev
-        ms-python.black-formatter
         ms-python.python
         ms-python.vscode-pylance
+        charliermarsh.ruff
 
         ms-toolsai.jupyter
         ms-toolsai.vscode-jupyter-slideshow

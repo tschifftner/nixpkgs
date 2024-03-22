@@ -44,6 +44,7 @@ in {
     Slack = 803453959;
     "Tailscale" = 1475387142;
     "Things 3" = 904280696;
+    "Microsoft Remote Desktop" = 1295203466;
   };
 
   # If an app isn't available in the Mac App Store, or the version in the App Store has
