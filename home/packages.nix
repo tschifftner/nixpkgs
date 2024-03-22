@@ -105,6 +105,7 @@
       curl # Transferring files with URL syntax
       du-dust # fancy version of `du`
       fd # fancy version of `find`
+      mdcat # display mardown files
       mosh # wrapper for `ssh` that better and not dropping connections
       unrar # extract RAR archives
       upterm # secure terminal sharing

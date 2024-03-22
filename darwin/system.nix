@@ -77,6 +77,7 @@
   system.defaults.menuExtraClock.Show24Hour = true;
   system.defaults.menuExtraClock.ShowAMPM = false;
 
+  system.defaults.screencapture.type = "png";
   system.defaults.screencapture.location =
     "/Users/ts/Library/Mobile Documents/com~apple~CloudDocs/Screenshots";
 
