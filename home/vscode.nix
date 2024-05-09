@@ -104,6 +104,18 @@
           version = "1.8.0";
           sha256 = "sha256-W2WlngFC5pAAjkj4lQNR5yPJZiedkjqGZHldjx8m7IU=";
         }
+        {
+          name = "biome";
+          publisher = "biomejs";
+          version = "2.2.2";
+          sha256 = "sha256-bvO1JC7chd1JtlcggvDCK8ZBhvmkyK5cD6rh4zfIZZs=";
+        }
+        {
+          name = "even-better-toml";
+          publisher = "tamasfe";
+          version = "0.19.2";
+          sha256 = "sha256-JKj6noi2dTe02PxX/kS117ZhW8u7Bhj4QowZQiJKP2E=";
+        }
 
       ];
 

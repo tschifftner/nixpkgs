@@ -32,3 +32,8 @@
 item = "x6plbr2qycpex3gykt466qotum"
 vault = "Private"
 account = "my.1password.com"
+
+[[ssh-keys]]
+item = "5nu3kxdyp2mxlv3zuhakvohph4"
+vault = "Private"
+account = "ambimax.1password.com"

@@ -6,6 +6,7 @@ let
 
   ambimaxPubKey = readFile ./ssh/ambimax-hetzner-cloud.pub;
   githubPubKey = readFile ./ssh/github.pub;
+  rotaryPubKey = readFile ./ssh/ambimax-rotary.pub;
   tsVpnKey = readFile ./ssh/ts-vpn.key;
 in {
   programs.ssh.extraConfig = "Include config.d/*";
@@ -26,6 +27,13 @@ in {
         HostName github.com
         User git
         IdentityFile ${writeText "github.pub" githubPubKey}
+        IdentitiesOnly yes
+
+    Host rotary
+        HostName rotaryeurope.eu
+        Port 22
+        User rotaryeurope
+        IdentityFile ${writeText "ambimax-rotary.pub" rotaryPubKey}
         IdentitiesOnly yes
 
     Host nixos
