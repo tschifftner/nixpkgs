@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 sudo rm -rf "$HOME/.cache/nix"
+sudo nix-collect-garbage
 sudo nix-store --verify --check-contents --repair
+sudo nix-store --gc

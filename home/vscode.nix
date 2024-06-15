@@ -38,6 +38,7 @@
         # Javascipt / Typescript
         mikestead.dotenv
         dbaeumer.vscode-eslint
+        prisma.prisma
 
         # Tailwind
         bradlc.vscode-tailwindcss
@@ -116,6 +117,12 @@
           version = "0.19.2";
           sha256 = "sha256-JKj6noi2dTe02PxX/kS117ZhW8u7Bhj4QowZQiJKP2E=";
         }
+        {
+          name = "mdmath";
+          publisher = "goessner";
+          version = "2.7.4";
+          sha256 = "sha256-DCh6SG7nckDxWLQvHZzkg3fH0V0KFzmryzSB7XTCj6s=";
+        }
 
       ];
 
@@ -132,6 +139,8 @@
         inlineSuggest.enabled = true;
         bracketPairColorization.enabled = true;
         formatOnSave = true;
+        defaultFormatter = "biomejs.biome";
+        codeActionsOnSave = { quickfix.biome = "explicit"; };
       };
 
       workbench = {
@@ -141,15 +150,25 @@
         editor.showIcons = true;
       };
 
+      # Formatting
+      "[css]" = { editor.defaultFormatter = "prettier"; };
+      "[yaml]" = { editor.defaultFormatter = "esbenp.prettier-vscode"; };
+      "[markdown]" = { editor.defaultFormatter = "esbenp.prettier-vscode"; };
+      "[toml]" = { editor.defaultFormatter = "tamasfe.even-better-toml"; };
+      "[dotenv]" = { editor.defaultFormatter = "foxundermoon.shell-format"; };
+
       scm = { defaultViewMode = "tree"; };
 
+      # Python
       notebook.formatOnSave.enabled = true;
-
-      jupyter.widgetScriptSources =
-        [ "jsdelivr.com" "unpkg.com" ]; # required by qgrid
-      jupyter.alwaysTrustNotebooks = true;
       python.formatting.provider = "black";
-      "[css]" = { editor.defaultFormatter = "prettier"; };
+
+      jupyter = {
+        # required by qgrid
+        widgetScriptSources = [ "jsdelivr.com" "unpkg.com" ];
+        alwaysTrustNotebooks = true;
+      };
+
       window.menuBarVisibility = "toggle";
       files.exclude = {
         "**/.git" = true;
@@ -160,6 +179,7 @@
         "**/Thumbs.db" = true;
         "**/*.olean" = true;
       };
+
     };
   };
 }

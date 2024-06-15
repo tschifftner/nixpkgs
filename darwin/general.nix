@@ -14,8 +14,7 @@
   programs.nix-index.enable = true;
 
   # Fonts
-  fonts.fontDir.enable = true;
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     recursive
     (nerdfonts.override {
       fonts = [ "Hasklig" "Hack" "JetBrainsMono" "Meslo" ];
@@ -26,6 +25,6 @@
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToEscape = true;
 
-  # Add ability to used TouchID for sudo authentication
+  # Add ability to use TouchID for sudo authentication
   security.pam.enableSudoTouchIdAuth = true;
 }
