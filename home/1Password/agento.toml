@@ -28,11 +28,20 @@
 #
 # More examples can be found here:
 #  https://developer.1password.com/docs/ssh/agent/config
+
+# ts@ambimax.de | default ssh key for most systems @ ambimax
 [[ssh-keys]]
 item = "x6plbr2qycpex3gykt466qotum"
 vault = "Private"
 account = "my.1password.com"
 
+# ts-vpn SSH-Key
+[[ssh-keys]]
+item = "lto576vs4ll7luwbgs4anr562q"
+vault = "Private"
+account = "my.1password.com"
+
+# rotaryeurope.eu SSH Key
 [[ssh-keys]]
 item = "5nu3kxdyp2mxlv3zuhakvohph4"
 vault = "Private"
