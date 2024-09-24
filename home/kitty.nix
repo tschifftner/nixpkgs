@@ -3,7 +3,7 @@
 {
   programs.kitty = {
     enable = true;
-    theme = "GitHub Dark Dimmed";
+    # theme = "GitHub Dark Dimmed";
     font.name = "JetBrainsMono";
     environment = { "LS_COLORS" = "1"; };
     shellIntegration = {

@@ -54,6 +54,7 @@ in {
     "1password-cli"
     "amethyst"
     "firefox"
+    "google-drive"
     "google-chrome"
     "transmit"
     "devtoys"

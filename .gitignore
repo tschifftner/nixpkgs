@@ -1,3 +1,5 @@
+.DS_Store
+
 pkgs/ruby-gems/vendor
 pkgs/ruby-gems/.bundle
 pkgs/python-packages/requirements_frozen.txt
@@ -6,3 +8,5 @@ private.nix
 private.nix
 
 result
+
+.tmp
