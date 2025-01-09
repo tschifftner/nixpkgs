@@ -30,7 +30,7 @@
   # Dock and Mission Control
   system.defaults.dock = {
     autohide = true;
-    expose-group-by-app = false;
+    expose-group-apps = false;
     mru-spaces = false;
     tilesize = 48;
     # Disable all hot corners
@@ -42,7 +42,7 @@
 
   # Dock Apps
   system.defaults.dock.persistent-apps = [
-    "/System/Library/CoreServices/Finder.app"
+    # "/System/Library/CoreServices/Finder.app"
     "/System/Applications/Launchpad.app"
   ];
 

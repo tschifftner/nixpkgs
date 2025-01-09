@@ -8,6 +8,12 @@ nix build .#darwinConfigurations.TobiasMacbookPro.system
 
 ### Install Rosetta 2
 
-```bash 
+```bash
 softwareupdate --install-rosetta --agree-to-license
 ```
+
+## Troubeshooting
+
+### Hash issues
+
+When there is a hash issue, check home/neovim.nix for adding a updated hash

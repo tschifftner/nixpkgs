@@ -39,14 +39,14 @@
   # `home-manager` currently has issues adding them to `~/Applications`
   # Issue: https://github.com/nix-community/home-manager/issues/1341
   # This is a workaround
-  environment.systemPath = [ "/opt/homebrew/bin" ];
-  environment.pathsToLink = [
-    "/Applications"
-    "/Applications/Nix Apps"
-    "/share/bash-completion"
-    "/share/zsh"
-    "/share/fish"
-  ];
+  # environment.systemPath = [ "/opt/homebrew/bin" ];
+  # environment.pathsToLink = [
+  #   "/Applications"
+  #   "/Applications/Nix Apps"
+  #   "/share/bash-completion"
+  #   "/share/zsh"
+  #   "/share/fish"
+  # ];
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;

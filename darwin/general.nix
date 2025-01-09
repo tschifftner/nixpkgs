@@ -16,9 +16,12 @@
   # Fonts
   fonts.packages = with pkgs; [
     recursive
-    (nerdfonts.override {
-      fonts = [ "Hasklig" "Hack" "JetBrainsMono" "Meslo" ];
-    })
+    nerd-fonts._0xproto
+    nerd-fonts.droid-sans-mono
+    hasklig
+    nerd-fonts.hack
+    jetbrains-mono
+    nerd-fonts.meslo-lg
   ];
 
   # Keyboard

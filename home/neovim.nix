@@ -8,7 +8,7 @@ let
       repo = "github-nvim-theme";
       rev = "v1.0.1";
       sha256 =
-        "sha256-2d8FJUfQZDL0LqFiUlnONh7gtVpTiFisHmD+BZm001s="; # Provide the correct sha256 hash here
+	      "sha256-30+5q6qE1GCetNKdUC15LcJeat5e0wj9XtNwGdpRsgk="; # Provide the correct sha256 hash here
     };
   };
 in {
