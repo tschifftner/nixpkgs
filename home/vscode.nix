@@ -89,8 +89,8 @@
         {
           name = "shebang-snippets";
           publisher = "rpinski";
-          version = "0.1.4";
-          sha256 = "sha256-UQpt4Wr8PPY5PVGWSEs8rGnohm7xe4vdNeKocJByNho=";
+          version = "1.0.1";
+          sha256 = "sha256-Buwp7XwfWogQt0WXswxVMa9c7gkVBDPvyy+9WeIn43A=";
         }
         {
           name = "commit-message-editor";
