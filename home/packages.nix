@@ -134,6 +134,11 @@
       statix # lints and suggestions for the Nix programming language
     ;
 
+    # AI tools
+    inherit(pkgs)
+      ollama
+    ;
+
   } // lib.optionalAttrs pkgs.stdenv.isDarwin {
     inherit (pkgs) m-cli # useful macOS CLI commands
     ;

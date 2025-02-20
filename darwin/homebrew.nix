@@ -54,6 +54,7 @@ in {
     "1password-cli"
     "amethyst"
     "calibre"
+    "chatbox"
     "firefox"
     "jdownloader"
     "google-drive"
@@ -63,6 +64,7 @@ in {
     "moneymoney"
     "obsidian"
     "steam"
+    "thorium"
     "thunderbird"
     "whatsapp"
   ];
