@@ -5,7 +5,7 @@
     enable = true;
     package = pkgs.vscode;
 
-    extensions = with pkgs.vscode-extensions;
+    profiles.default.extensions = with pkgs.vscode-extensions;
       [
         github.github-vscode-theme
         bbenoist.nix
@@ -126,7 +126,7 @@
 
       ];
 
-    userSettings = {
+    profiles.default.userSettings = {
       update.mode = "none";
       window.zoomLevel = 0;
 
