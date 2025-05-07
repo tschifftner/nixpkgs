@@ -33,7 +33,6 @@
 
   # Improved ls tool
   programs.lsd.enable = true;
-  programs.lsd.enableAliases = true;
   programs.lsd.settings = {
     date = "relative";
     ignore-globs = [ ".git" ".hg" ];

@@ -43,7 +43,7 @@
     ];
 
     # Add nix
-    initExtra = ''
+    initContent = ''
       ${builtins.readFile ./zsh/custom-zsh.sh}
 
       # Setup bindings for both smkx and rmkx key variants
