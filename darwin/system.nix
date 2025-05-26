@@ -1,4 +1,6 @@
 {
+  system.primaryUser = "ts";
+  
   system.defaults.NSGlobalDomain = {
     "com.apple.trackpad.scaling" = 5.0;
     AppleFontSmoothing = 1;
