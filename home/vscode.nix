@@ -16,6 +16,8 @@
         mkhl.direnv
         formulahendry.code-runner
         usernamehw.errorlens
+        github.copilot
+        github.copilot-chat
 
         # vscode theme
         pkief.material-icon-theme
@@ -70,27 +72,27 @@
         {
           name = "remote-ssh-edit";
           publisher = "ms-vscode-remote";
-          version = "0.86.0";
-          sha256 = "sha256-JsbaoIekUo2nKCu+fNbGlh5d1Tt/QJGUuXUGP04TsDI=";
+          version = "0.87.0";
+          sha256 = "sha256-yeX6RAJl07d+SuYyGQFLZNcUzVKAsmPFyTKEn+y3GuM=";
         }
         {
           name = "vscodeintellicode";
           publisher = "visualstudioexptteam";
-          version = "1.2.30";
-          sha256 = "0lg298047vmy31fnkczgpw78k3yxzpiip0ln1wixy70hdpwsfqbz";
+          version = "1.3.2";
+          sha256 = "sha256-2zexyX1YKD5jgtsvDx7/z3luh5We71ys+XRlVcNywfs=";
         }
         {
           name = "1Password";
           publisher = "op-vscode";
           version = "v1.0.4";
           sha256 =
-            "b3a69cb9ef248052dfe5fb3803b97e2187e189b758efa70b708c0797ee785959";
+           "b3a69cb9ef248052dfe5fb3803b97e2187e189b758efa70b708c0797ee785959";
         }
         {
           name = "shebang-snippets";
           publisher = "rpinski";
-          version = "1.0.1";
-          sha256 = "sha256-Buwp7XwfWogQt0WXswxVMa9c7gkVBDPvyy+9WeIn43A=";
+          version = "1.1.0";
+          sha256 = "sha256-biv0Ccdfwd68hsY8UwLc+0vAnfmV+Ngnqie3QOo6VBc=";
         }
         {
           name = "commit-message-editor";
@@ -108,14 +110,14 @@
         {
           name = "biome";
           publisher = "biomejs";
-          version = "2.2.2";
-          sha256 = "sha256-bvO1JC7chd1JtlcggvDCK8ZBhvmkyK5cD6rh4zfIZZs=";
+          version = "3.0.3";
+          sha256 = "sha256-N5viE2YtYtOWsE7R7K+c/gJkTow48eSy3GGmP1BJvjg=";
         }
         {
           name = "even-better-toml";
           publisher = "tamasfe";
-          version = "0.19.2";
-          sha256 = "sha256-JKj6noi2dTe02PxX/kS117ZhW8u7Bhj4QowZQiJKP2E=";
+          version = "0.21.2";
+          sha256 = "sha256-IbjWavQoXu4x4hpEkvkhqzbf/NhZpn8RFdKTAnRlCAg=";
         }
         {
           name = "mdmath";

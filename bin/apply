@@ -4,14 +4,14 @@
 if command -v darwin-rebuild >/dev/null 2>&1; then
     git add .
     echo "darwin-rebuild switch --flake . $*"
-    darwin-rebuild switch --flake . "$@"
+    sudo darwin-rebuild switch --flake . "$@"
 else
     # Command to execute if nix-darwin is not installed
     echo "darwin-rebuild is not yet installed, build flake with nix"
-    nix build \
+    sudo nix build \
         --no-eval-cache \
         --show-trace \
         .#darwinConfigurations.TobiasMacbookPro.system
 
-    ./result/sw/bin/darwin-rebuild switch --flake . "$@"
+    sudo ./result/sw/bin/darwin-rebuild switch --flake . "$@"
 fi

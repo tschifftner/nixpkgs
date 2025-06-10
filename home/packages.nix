@@ -55,7 +55,6 @@
   programs.less.enable = true;
   programs.ripgrep.enable = true;
   programs.tealdeer.enable = true;
-  programs.thefuck.enable = true;
   programs.jq.enable = true;
 
   programs.k9s = {
@@ -115,7 +114,7 @@
     # Dev stuff
     inherit (pkgs)
       cloc # source code line counter
-      github-copilot-cli nodejs s3cmd typescript yq shfmt colima docker
+      gh-copilot nodejs s3cmd typescript yq shfmt colima docker
       docker-compose;
 
     # Kubernetes stuff
