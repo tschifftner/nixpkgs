@@ -114,7 +114,7 @@
     # Dev stuff
     inherit (pkgs)
       cloc # source code line counter
-      gh-copilot nodejs s3cmd typescript yq shfmt colima docker
+      gh-copilot nodejs s3cmd typescript yq shfmt colima docker biome
       docker-compose;
 
     # Kubernetes stuff
