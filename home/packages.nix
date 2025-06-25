@@ -61,17 +61,13 @@
     enable = true;
     skins = { default = { k9s = { body = { fgColor = "dodgerblue"; }; }; }; };
     views = {
-      k9s = {
-        views = {
-          "v1/pods" = {
-            columns = [ "AGE" "NAMESPACE" "NAME" "IP" "NODE" "STATUS" "READY" ];
-          };
-        };
+      # Move all nested views directly under programs.k9s.views
+      "v1/pods" = {
+        columns = [ "AGE" "NAMESPACE" "NAME" "IP" "NODE" "STATUS" "READY" ];
       };
     };
-    plugin = {
-      # Defines a plugin to provide a `ctrl-l` shortcut to  
-      # tail the logs while in pod view.  
+    plugins = {
+      # Renamed from plugin to plugins
       fred = {
         shortCut = "Ctrl-L";
         description = "Pod logs";
@@ -114,7 +110,7 @@
     # Dev stuff
     inherit (pkgs)
       cloc # source code line counter
-      gh-copilot nodejs s3cmd typescript yq shfmt colima docker biome
+      gh-copilot nodejs s3cmd typescript yq shfmt colima docker biome firebase-tools
       docker-compose;
 
     # Kubernetes stuff

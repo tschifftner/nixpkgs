@@ -125,6 +125,18 @@
           version = "2.7.4";
           sha256 = "sha256-DCh6SG7nckDxWLQvHZzkg3fH0V0KFzmryzSB7XTCj6s=";
         }
+        {
+          name = "vscode-typescript-next";
+          publisher = "ms-vscode";
+          version = "5.8.20250114";
+          sha256 = "sha256-SASBHJtk4c6MedieH75K1Xl1F5c212x9og0R9IigVd4=";
+        }
+        {
+          name = "markdown-mermaid";
+          publisher = "bierner";
+          version = "1.28.0";
+          sha256 = "sha256-NAQD6DK1c13nA/O0QHNxFraImE6C0+Jzj9+f06EkiW0=";
+        }
 
       ];
 
@@ -172,6 +184,16 @@
       };
 
       window.menuBarVisibility = "toggle";
+      
+      # GitHub Copilot Chat
+      chat.tools.autoApprove = true;
+      github.copilot.chat.languageContext.inline.typescript.enabled = true;
+      github.copilot.chat.edits.temporalContext.enabled = true;
+      github.copilot.chat.codesearch.enabled = true;
+      github.copilot.chat.languageContext.fix.typescript.enabled = true;
+      github.copilot.chat.localeOverride = "de";
+      chat.agent.maxRequests = 50;
+      
       files.exclude = {
         "**/.git" = true;
         "**/.svn" = true;
