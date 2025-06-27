@@ -137,6 +137,12 @@
           version = "1.28.0";
           sha256 = "sha256-NAQD6DK1c13nA/O0QHNxFraImE6C0+Jzj9+f06EkiW0=";
         }
+        {
+          name = "playwright";
+          publisher = "ms-playwright";
+          version = "1.1.15"; # Stand: 4.6.2025
+          sha256 = "sha256-1fdUyzJitFfl/cVMOjEiuBS/+FTGttilXoZ8txZMmVs=";
+        }
 
       ];
 

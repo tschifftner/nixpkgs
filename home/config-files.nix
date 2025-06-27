@@ -8,4 +8,9 @@
     source = ./1Password/kubectl-wrapper.sh;
     executable = true;
   };
+
+  home.file.".supabase/config.toml".text = ''
+    [analytics]
+    enabled = false
+  '';
 }
