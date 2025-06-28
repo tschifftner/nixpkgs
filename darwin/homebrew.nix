@@ -69,6 +69,7 @@ in {
     "thunderbird"
     "whatsapp"
     "visual-studio-code-insiders"
+    "canva"
   ];
 
   # Configuration related to casks
