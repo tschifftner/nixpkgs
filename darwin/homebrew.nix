@@ -68,6 +68,7 @@ in {
     "thorium"
     "thunderbird"
     "whatsapp"
+    "visual-studio-code-insiders"
   ];
 
   # Configuration related to casks

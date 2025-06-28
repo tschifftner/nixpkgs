@@ -198,7 +198,7 @@
       github.copilot.chat.codesearch.enabled = true;
       github.copilot.chat.languageContext.fix.typescript.enabled = true;
       github.copilot.chat.localeOverride = "de";
-      chat.agent.maxRequests = 50;
+      chat.agent.maxRequests = 500;
       
       files.exclude = {
         "**/.git" = true;
