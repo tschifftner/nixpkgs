@@ -93,42 +93,66 @@
 
   home.packages = lib.attrValues ({
     supabase-cli = pkgs.callPackage ./supabase-cli.nix { };
+
     # Some cli basics
     inherit (pkgs)
       bandwhich # display current network utilization by process
       coreutils # The GNU Core Utilities
       curl # Transferring files with URL syntax
-      delta # A viewer for git and diff output
-      direnv # Load and unload environment variables depending on the current directory
-      dnsutils # DNS utilities (dig, nslookup)
-      du-dust # du-dust, a more intuitive version of du in rust
-      eza # A modern replacement for ls
-      fd # A simple, fast and user-friendly alternative to find
-      gh # Github cli
-      git # Distributed version control system
-      gnupg # GNU Privacy Guard
-      go # The Go programming language
-      gum # A tool for glamorous shell scripts
-      htop # Interactive process viewer
-      httpie # A user-friendly cURL replacement
-      jq # A lightweight and flexible command-line JSON processor
-      lazygit # A simple terminal UI for git commands
-      neofetch # A command-line system information tool
-      nix-output-monitor # A tool to monitor nix build output
-      nmap # A security scanner
-      openssh # An open source version of the SSH protocol suite of network connectivity tools
-      p7zip # A file archiver with high compression ratio
-      ripgrep # A line-oriented search tool that recursively searches the current directory for a regex pattern
-      sd # An intuitive find & replace CLI
-      shellcheck # A static analysis tool for shell scripts
-      socat # A utility for reading from and writing to network connections
-      tealdeer # A very fast implementation of tldr in Rust
-      tree # A recursive directory listing command
-      unzip # An extraction utility for archives compressed in .zip format
-      wget # A utility for non-interactive download of files from the Web
-      yq-go # A portable command-line YAML processor
-      zoxide # A faster way to navigate your filesystem
-      zsh # The Z shell
-      ;
+      du-dust # fancy version of `du`
+      fd # fancy version of `find`
+      mdcat # display mardown files
+      mosh # wrapper for `ssh` that better and not dropping connections
+      unrar # extract RAR archives
+      upterm # secure terminal sharing
+      wget2 # Faster than wget
+      xz # extract XZ archives
+    ;
+
+    # Dev stuff
+    inherit (pkgs)
+      cloc # source code line counter
+      gh-copilot # GitHub Copilot CLI
+      nodejs # Node.js runtime
+      s3cmd # command line tool for managing Amazon S3 and CloudFront
+      typescript # TypeScript compiler
+      yq # command-line YAML processor, similar to jq
+      shfmt # shell script formatter
+      colima # container runtime with support for Docker and Kubernetes
+      docker # container runtime
+      biome # JavaScript and TypeScript linter, formatter, and bundler
+      firebase-tools # command line tools for Firebase
+      docker-compose # tool for defining and running multi-container Docker applications
+    ;
+
+    # Kubernetes stuff
+    inherit (pkgs) 
+      kustomize # tool for customizing Kubernetes YAML configurations
+      kubernetes-helm # Helm package manager for Kubernetes
+      kubectl # command line tool for interacting with Kubernetes clusters
+      kubectx # switch between Kubernetes clusters easily
+    ;
+
+    # Useful nix related tools
+    inherit (pkgs)
+      cachix # adding/managing alternative binary caches hosted by Cachix
+      comma # run software from without installing it
+      nix-output-monitor # get additional information while building packages
+      nix-tree # interactively browse dependency graphs of Nix derivations
+      nix-update # swiss-knife for updating nix packages
+      nixpkgs-review # review pull-requests on nixpkgs
+      node2nix # generate Nix expressions to build NPM packages
+      statix # lints and suggestions for the Nix programming language
+    ;
+
+    # AI tools
+    inherit (pkgs)
+      ollama # run and manage large language models locally
+    ;
+
+  } // lib.optionalAttrs pkgs.stdenv.isDarwin {
+    inherit (pkgs) 
+      m-cli # useful macOS CLI commands
+    ;
   });
 }

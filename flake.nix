@@ -50,5 +50,14 @@
 
       darwinConfigurations.TobiasMacbookPro =
         darwin.lib.darwinSystem { inherit system pkgs modules specialArgs; };
+
+      homeConfigurations.ts = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
+          ./home
+          { home.username = "ts"; home.homeDirectory = "/Users/ts"; }
+        ];
+        extraSpecialArgs = specialArgs;
+      };
     };
 }

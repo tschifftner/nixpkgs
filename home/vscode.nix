@@ -143,6 +143,12 @@
           version = "1.1.15"; # Stand: 4.6.2025
           sha256 = "sha256-1fdUyzJitFfl/cVMOjEiuBS/+FTGttilXoZ8txZMmVs=";
         }
+        # {
+        #   name = "geminicodeassist";
+        #   publisher = "Google";
+        #   version = "0.5.1";
+        #   sha256 = ""; # Bitte nach erstem Build mit dem richtigen Hash ersetzen
+        # }
 
       ];
 
@@ -151,6 +157,23 @@
       window.zoomLevel = 0;
 
       terminal.integrated.shell.linux = "${pkgs.zsh}/bin/zsh";
+
+      mcp = {
+        servers = {
+          github = {
+            gallery = true;
+            url = "https://api.githubcopilot.com/mcp/";
+          };
+
+          playwright = {
+            gallery = true;
+            command = "npx";
+            args = [
+              "@playwright/mcp@latest"
+            ];
+          };
+        };
+      };
 
       editor = {
         fontFamily =
@@ -168,6 +191,7 @@
         colorTheme = "GitHub Dark Dimmed"; # Material Theme Ocean High Contrast
         preferredDarkColorTheme = "GitHub Dark Dimmed";
         editor.showIcons = true;
+        panel.showLabels = false;
       };
 
       # Formatting

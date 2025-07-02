@@ -206,8 +206,14 @@ The VS Code configuration includes these formatting settings:
 3. **Build configuration** with `nix build .#darwinConfigurations.TobiasMacbookPro.system`
 4. **Apply changes** with `sudo darwin-rebuild switch --flake .`
 5. **Commit changes** with conventional commit messages
+6. **Push to GitHub** and create a pull request if needed
+7. **Review changes** in CI and ensure everything passes
+8. **Merge changes** once approved
+9. **Test the configuration** on your machine to ensure everything works as expected
 
 ### ✅ Adding New Packages
+
+When ask to install a new package, do not run `brew install` or `nix-env -i`. Instead, add the package to the appropriate Nix configuration files.
 
 ```nix
 # Add to home/packages.nix for user packages
@@ -257,6 +263,7 @@ profiles.default.extensions = with pkgs.vscode-extensions; [
   - `refactor:` - code refactoring
   - `test:` - test additions
   - `chore:` - maintenance tasks
+- Ensure nixfmt is run on all Nix files before committing
 
 ---
 
@@ -268,7 +275,7 @@ profiles.default.extensions = with pkgs.vscode-extensions; [
 4. **Leverage Nix's reproducibility** - Everything should be declarative
 5. **Use the ecosystem** - Prefer nixpkgs packages over manual installations
 6. **Document decisions** - Add comments explaining complex configurations
-7. **Test changes** - Use `nix flake check` and build before applying
+7. **Test changes** - Use `nix flake check` and build before applying, test also on Terminal
 8. **Version everything** - All configuration should be in version control
 
 ---
