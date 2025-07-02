@@ -51,11 +51,26 @@
       darwinConfigurations.TobiasMacbookPro =
         darwin.lib.darwinSystem { inherit system pkgs modules specialArgs; };
 
+      darwinConfigurations.githubCI =
+        darwin.lib.darwinSystem { inherit system pkgs modules specialArgs; };
+
       homeConfigurations.ts = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [
           ./home
           { home.username = "ts"; home.homeDirectory = "/Users/ts"; }
+        ];
+        extraSpecialArgs = specialArgs;
+      };
+
+      # Linux CI-Konfiguration für GitHub Actions
+      homeConfigurations.runner = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config = { allowUnfree = true; };
+        };
+        modules = [
+          { home.username = "runner"; home.homeDirectory = "/home/runner"; }
         ];
         extraSpecialArgs = specialArgs;
       };
