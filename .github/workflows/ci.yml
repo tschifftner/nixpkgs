@@ -3,71 +3,63 @@ name: Build Nix envs
 on:
   pull_request:
     paths:
-    - '**'
-    - '!**.md'
+      - "**"
+      - "!**.md"
   push:
     paths:
-    - '**'
-    - '!**.md'
+      - "**"
+      - "!**.md"
   schedule:
-    - cron: '0 0 * * 0' # Every Sunday at midnight UTC
+    - cron: "0 0 * * 0" # Every Sunday at midnight UTC
 
 jobs:
-
   build-macos-env:
     name: Build/cache macOS Nix env
     runs-on: macos-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-    - name: Install Nix
-      uses: cachix/install-nix-action@v31
-      with:
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: If scheduled, update inputs
+        if: ${{ github.event_name == 'schedule' && success() }}
+        run: |
+          nix flake update
 
-    - name: If scheduled, update inputs
-      if: ${{ github.event_name == 'schedule' && success() }}
-      run: |
-        nix flake update
+      - name: Build nix-darwin system (nur Build, kein Switch)
+        run: |
+          nix build .#darwinConfigurations.githubCI.system
 
-    - name: Build and switch to nix-darwin env
-      run: |
-        # Create /run directory
-        echo -e "run\tprivate/var/run" | sudo tee -a /etc/synthetic.conf >/dev/null
-        /System/Library/Filesystems/apfs.fs/Contents/Resources/apfs.util -t &>/dev/null || true
-        # Build and switch to config
-        nix build .#darwinConfigurations.githubCI.system
-        ./result/sw/bin/darwin-rebuild switch --flake .#githubCI
-
-    - name: If scheduled, push commit with updated inputs
-      if: ${{ github.event_name == 'schedule' && success() }}
-      run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git aa
-        git cm "Update inputs"
-        git push
+      - name: If scheduled, push commit with updated inputs
+        if: ${{ github.event_name == 'schedule' && success() }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git aa
+          git cm "Update inputs"
+          git push
 
   build-linux-env:
     name: Build/cache Linux Nix env
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-    - name: Install Nix
-      uses: cachix/install-nix-action@v31
-      with:
-        extra_nix_config: |
-          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-
-    - name: Build and switch to home-manager env
-      run: |
-        # Build and switch to home-manager env
-        nix build .#homeConfigurations.runner.activationPackage; ./result/activate
+      - name: Build and switch to home-manager env
+        run: |
+          # Build and switch to home-manager env
+          nix build .#homeConfigurations.runner.activationPackage; ./result/activate

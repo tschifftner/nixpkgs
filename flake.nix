@@ -70,7 +70,7 @@
           config = { allowUnfree = true; };
         };
         modules = [
-          { home.username = "runner"; home.homeDirectory = "/home/runner"; }
+          { home.username = "runner"; home.homeDirectory = "/home/runner"; home.stateVersion = "24.05"; }
         ];
         extraSpecialArgs = specialArgs;
       };
