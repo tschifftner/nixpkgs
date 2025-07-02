@@ -36,7 +36,6 @@ in {
     "homebrew/cask-versions"
     "homebrew/services"
     "nrlquaker/createzap"
-    "supabase/tap"
   ];
 
   # Prefer installing application from the Mac App Store
@@ -99,5 +98,5 @@ in {
 
   # For cli packages that aren't currently available for macOS in `nixpkgs`.Packages should be
   # installed in `../home/default.nix` whenever possible.
-  homebrew.brews = [ "lima-additional-guestagents" "supabase/tap/supabase" ];
+  homebrew.brews = [ "lima-additional-guestagents" ];
 }
