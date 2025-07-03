@@ -3,8 +3,12 @@
   "extends": [
     "config:recommended"
   ],
-  "enabledManagers": ["nix"],
+  "enabledManagers": [
+    "nix"
+  ],
   "nix": {
-    "fileMatch": ["(^|/)flake.lock$"]
+    "managerFilePatterns": [
+      "/(^|/)flake.lock$/"
+    ]
   }
 }
