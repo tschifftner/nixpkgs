@@ -110,8 +110,8 @@
         {
           name = "biome";
           publisher = "biomejs";
-          version = "3.0.3";
-          sha256 = "sha256-N5viE2YtYtOWsE7R7K+c/gJkTow48eSy3GGmP1BJvjg=";
+          version = "2025.5.251939";
+          sha256 = "sha256-k0/aQnkHSICIQ5n6CSUGF0Z/HiTeet0BCf0UxQRxq7g=";
         }
         {
           name = "even-better-toml";
@@ -128,7 +128,7 @@
         {
           name = "vscode-typescript-next";
           publisher = "ms-vscode";
-          version = "5.8.20250114";
+          version = "5.9.20250702";
           sha256 = "sha256-SASBHJtk4c6MedieH75K1Xl1F5c212x9og0R9IigVd4=";
         }
         {
