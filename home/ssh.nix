@@ -30,34 +30,6 @@ in {
         User git
         IdentityFile ${writeText "github.pub" githubPubKey}
         IdentitiesOnly yes
-
-    Host rotary
-        HostName rotaryeurope.eu
-        Port 22
-        User rotaryeurope
-        IdentityFile ${writeText "ambimax-rotary.pub" rotaryPubKey}
-        IdentitiesOnly yes
-
-    Host nixos
-        HostName 78.47.137.218
-
-    Host ts-proxy
-        HostName 167.235.158.223
-
-    Host karm ts-k3s-arm
-        HostName 159.69.124.37
-
-    Host monitoring
-        HostName 167.235.243.187
-
-    Host ts-k3s
-        HostName 168.119.111.45
-
-    Host ambimax-intern
-    HostName 206.189.57.97
-
-    Host ambimax-intern-k8s-lb
-        HostName 206.189.57.97
   '';
 
   home.file.".ssh/config.d/global".text = ''
