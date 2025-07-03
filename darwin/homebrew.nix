@@ -69,6 +69,7 @@ in {
     "whatsapp"
     "visual-studio-code-insiders"
     "canva"
+    "claude"
   ];
 
   # Configuration related to casks
