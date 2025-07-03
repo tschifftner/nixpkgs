@@ -148,6 +148,7 @@
     # AI tools
     inherit (pkgs)
       ollama # run and manage large language models locally
+      gemini-cli # Google Gemini CLI
     ;
 
   } // lib.optionalAttrs pkgs.stdenv.isDarwin {
