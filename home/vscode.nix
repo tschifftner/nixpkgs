@@ -172,6 +172,14 @@
               "@playwright/mcp@latest"
             ];
           };
+
+          browsermcp = {
+            gallery = true;
+            command = "npx";
+            args = [
+              "@browsermcp/mcp@latest"
+            ];  
+          };
         };
       };
 
