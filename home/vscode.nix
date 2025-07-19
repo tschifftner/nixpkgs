@@ -153,6 +153,7 @@
       ];
 
     profiles.default.userSettings = {
+      geminicodeassist.updateChannel = "Insiders";
       update.mode = "none";
       window.zoomLevel = 0;
 
@@ -161,12 +162,10 @@
       mcp = {
         servers = {
           github = {
-            gallery = true;
             url = "https://api.githubcopilot.com/mcp/";
           };
 
           playwright = {
-            gallery = true;
             command = "npx";
             args = [
               "@playwright/mcp@latest"
@@ -174,14 +173,20 @@
           };
 
           browsermcp = {
-            gallery = true;
             command = "npx";
             args = [
               "@browsermcp/mcp@latest"
             ];  
           };
+
+          context7 = {
+            command = "npx";
+            args = [ "-y" "@upstash/context7-mcp" ];
+          };
+
         };
       };
+
 
       editor = {
         fontFamily =

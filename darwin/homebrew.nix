@@ -50,6 +50,7 @@ in {
   # If an app isn't available in the Mac App Store, or the version in the App Store has
   # limitiations, e.g., Transmit, install the Homebrew Cask.
   homebrew.casks = [
+    "keepingyouawake"
     "1password"
     "1password-cli"
     "amethyst"
