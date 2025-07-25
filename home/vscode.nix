@@ -146,7 +146,10 @@
         bracketPairColorization.enabled = true;
         formatOnSave = true;
         defaultFormatter = "biomejs.biome";
-        codeActionsOnSave = { quickfix.biome = "explicit"; };
+        codeActionsOnSave = { 
+          source.organizeImports = "explicit"; 
+          quickfix.biome = "explicit"; 
+        };
       };
 
       workbench = {
