@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+# VS Code Latest Version Update Script
+# Automatically updates VS Code to the absolute latest version from Microsoft
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NIXPKGS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+VSCODE_CONFIG="$NIXPKGS_DIR/home/vscode.nix"
+
+echo "🚀 Updating VS Code to the absolute latest version from Microsoft..."
+
+# Get latest version from GitHub API
+echo "🌐 Fetching latest VS Code release..."
+LATEST_VERSION=$(curl -s "https://api.github.com/repos/microsoft/vscode/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | head -1)
+LATEST_COMMIT=$(curl -s "https://api.github.com/repos/microsoft/vscode/releases/latest" | grep '"target_commitish":' | sed -E 's/.*"([^"]+)".*/\1/' | head -1)
+
+if [ -z "$LATEST_VERSION" ] || [ -z "$LATEST_COMMIT" ]; then
+    echo "❌ Failed to fetch latest version information"
+    exit 1
+fi
+
+echo "📋 Latest VS Code version: $LATEST_VERSION"
+echo "📝 Commit: $LATEST_COMMIT"
+
+# Check current version
+CURRENT_VERSION=$(grep 'version = ".*"' "$VSCODE_CONFIG" | sed -E 's/.*version = "([^"]+)".*/\1/' | head -1)
+echo "📋 Current version: $CURRENT_VERSION"
+
+if [ "$CURRENT_VERSION" = "$LATEST_VERSION" ]; then
+    echo "✅ You already have the latest version!"
+    exit 0
+fi
+
+echo "⚡ Updating from $CURRENT_VERSION to $LATEST_VERSION"
+
+# Create a temporary file with updated version and commit
+TEMP_CONFIG=$(mktemp)
+cp "$VSCODE_CONFIG" "$TEMP_CONFIG"
+
+# Update version
+sed -i.bak "s/version = \".*\"/version = \"$LATEST_VERSION\"/" "$TEMP_CONFIG"
+
+# Update commit (take first 40 chars of commit hash)
+SHORT_COMMIT=$(echo "$LATEST_COMMIT" | cut -c1-40)
+sed -i.bak "s/rev = \".*\"/rev = \"$SHORT_COMMIT\"/" "$TEMP_CONFIG"
+
+# Reset hashes to trigger recalculation
+sed -i.bak 's/hash = "sha256-.*"/hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/' "$TEMP_CONFIG"
+
+# Copy back the updated config
+cp "$TEMP_CONFIG" "$VSCODE_CONFIG"
+rm "$TEMP_CONFIG" "$TEMP_CONFIG.bak"
+
+echo "🔨 Building with new version to calculate hashes..."
+
+# Build to get the correct hashes
+cd "$NIXPKGS_DIR"
+
+# First build will fail but give us the VS Code server hash
+echo "🔍 Getting VS Code server hash..."
+SERVER_HASH=$(nix build .#darwinConfigurations.TobiasMacbookPro.config.home-manager.users.ts.programs.vscode.package --log-format raw 2>&1 | grep "got:" | tail -1 | sed -E 's/.*got:[[:space:]]+(sha256-[^[:space:]]+).*/\1/' || echo "")
+
+if [ -n "$SERVER_HASH" ]; then
+    echo "📝 VS Code server hash: $SERVER_HASH"
+    # Update the server hash
+    sed -i.bak "s/hash = \"sha256-[^\"]*\"/hash = \"$SERVER_HASH\"/" "$VSCODE_CONFIG"
+    rm "$VSCODE_CONFIG.bak"
+    
+    # Build again to get the main VS Code hash
+    echo "🔍 Getting main VS Code hash..."
+    MAIN_HASH=$(nix build .#darwinConfigurations.TobiasMacbookPro.config.home-manager.users.ts.programs.vscode.package --log-format raw 2>&1 | grep "got:" | tail -1 | sed -E 's/.*got:[[:space:]]+(sha256-[^[:space:]]+).*/\1/' || echo "")
+    
+    if [ -n "$MAIN_HASH" ]; then
+        echo "📝 Main VS Code hash: $MAIN_HASH"
+        # Update the main hash (first occurrence)
+        sed -i.bak "0,/hash = \"sha256-[^\"]*\"/{s/hash = \"sha256-[^\"]*\"/hash = \"$MAIN_HASH\"/;}" "$VSCODE_CONFIG"
+        rm "$VSCODE_CONFIG.bak"
+    fi
+fi
+
+# Final build test
+echo "🔨 Final build test..."
+if nix build .#darwinConfigurations.TobiasMacbookPro.config.home-manager.users.ts.programs.vscode.package --log-format raw; then
+    echo "✅ Build successful!"
+    echo ""
+    echo "🚀 VS Code updated to version $LATEST_VERSION"
+    echo ""
+    echo "📋 To apply the update:"
+    echo "   home-manager switch --flake ."
+    echo ""
+    echo "📊 After applying, verify with:"
+    echo "   code --version"
+else
+    echo "❌ Build failed! Reverting changes..."
+    git checkout HEAD -- "$VSCODE_CONFIG" 2>/dev/null || echo "Manual revert needed!"
+    exit 1
+fi

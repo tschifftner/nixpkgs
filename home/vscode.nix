@@ -1,9 +1,46 @@
 { pkgs, ... }:
 
+let
+  # Custom VS Code package with LATEST version directly from Microsoft
+  # This overrides the nixpkgs version with the newest release
+  vscode-latest = pkgs.vscode.overrideAttrs (oldAttrs: rec {
+    version = "1.102.2";  # Latest version as of July 28, 2025
+    
+    # Update the rev for VS Code Remote SSH
+    rev = "c306e94f98122556ca081f527b466015e1bc37b0";  # commit for 1.102.2
+    
+    src = pkgs.fetchurl {
+      name = "VSCode_${version}_darwin-arm64.zip";
+      url = "https://update.code.visualstudio.com/${version}/darwin-arm64/stable";
+      # Hash for VS Code 1.102.2 darwin-arm64
+      hash = "sha256-c64gB5t0U0glgcfMlCvVBphQ3rsX758vCUFPVNWqTJY=";
+    };
+    
+    # Update vscode server for Remote SSH
+    vscodeServer = pkgs.srcOnly {
+      name = "vscode-server-${rev}.tar.gz";
+      src = pkgs.fetchurl {
+        name = "vscode-server-${rev}.tar.gz";
+        url = "https://update.code.visualstudio.com/commit:${rev}/server-linux-x64/stable";
+        hash = "sha256-tvbyqgH8nF0mui0UnDAvN2LdjcB8GQVbSg48cwe6BFA=";
+      };
+      stdenv = pkgs.stdenvNoCC;
+    };
+    
+    meta = oldAttrs.meta // {
+      description = "VS Code ${version} - Latest release directly from Microsoft";
+      longDescription = ''
+        Visual Studio Code ${version} compiled directly from Microsoft releases.
+        This bypasses nixpkgs delays and always gets the newest version.
+        Updated: July 28, 2025
+      '';
+    };
+  });
+in
 {
   programs.vscode = {
     enable = true;
-    package = pkgs.vscode;
+    package = vscode-latest;
 
     profiles.default.extensions = 
       (with pkgs.vscode-extensions; [
