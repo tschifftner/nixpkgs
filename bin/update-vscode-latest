@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+# VS Code Hash Fixer and Update Script
+# Fixes missing hashes and updates VS Code to latest version
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NIXPKGS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+VSCODE_CONFIG="$NIXPKGS_DIR/home/vscode.nix"
+
+echo "� VS Code Hash Fixer and Update Script"
+
+# Check current version in config
+CURRENT_VERSION=$(grep 'version = ".*"' "$VSCODE_CONFIG" | sed -E 's/.*version = "([^"]+)".*/\1/' | head -1)
+echo "📋 Current version in config: $CURRENT_VERSION"
+
+# Get latest version from GitHub API
+echo "🌐 Fetching latest VS Code release..."
+LATEST_VERSION=$(curl -s "https://api.github.com/repos/microsoft/vscode/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | head -1)
+
+if [ -z "$LATEST_VERSION" ]; then
+    echo "❌ Failed to fetch latest version"
+    exit 1
+fi
+
+echo "� Latest VS Code version: $LATEST_VERSION"
+
+# Get the actual commit hash for the latest release
+echo "🔍 Getting commit hash for version $LATEST_VERSION..."
+RELEASE_INFO=$(curl -s "https://api.github.com/repos/microsoft/vscode/releases/latest")
+COMMIT_SHA=$(echo "$RELEASE_INFO" | grep -o '"target_commitish": "[^"]*"' | cut -d'"' -f4)
+
+if [ -z "$COMMIT_SHA" ]; then
+    echo "❌ Failed to get commit hash"
+    exit 1
+fi
+
+echo "📝 Commit hash: $COMMIT_SHA"
+
+# Update version and commit if needed
+if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+    echo "⚡ Updating from $CURRENT_VERSION to $LATEST_VERSION"
+
+    # Update version
+    sed -i.bak "s/version = \".*\";/version = \"$LATEST_VERSION\";/" "$VSCODE_CONFIG"
+
+    # Update commit hash
+    sed -i.bak "s/rev = \".*\";/rev = \"$COMMIT_SHA\";/" "$VSCODE_CONFIG"
+
+    # Remove backup file
+    rm -f "$VSCODE_CONFIG.bak"
+fi
+
+# Always fix hashes by setting them to dummy values first
+echo "🔨 Resetting hashes to trigger recalculation..."
+sed -i.bak 's/hash = "sha256-[^"]*"/hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/g' "$VSCODE_CONFIG"
+rm -f "$VSCODE_CONFIG.bak"
+
+# Now fix the hashes by building and extracting them
+echo "� Building to get correct hashes..."
+cd "$NIXPKGS_DIR"
+
+# Function to extract hash from nix build error
+extract_hash() {
+    local build_output="$1"
+    echo "$build_output" | grep -E "got:\s+sha256-[A-Za-z0-9+/=]+" | tail -1 | sed -E 's/.*got:[[:space:]]+(sha256-[A-Za-z0-9+/=]+).*/\1/'
+}
+
+# First build attempt - will fail but give us VS Code server hash
+echo "� Getting VS Code server hash..."
+SERVER_HASH=""
+BUILD_OUTPUT=$(nix build .#darwinConfigurations.TobiasMacbookPro.config.home-manager.users.ts.programs.vscode.package --log-format raw 2>&1 || true)
+
+if echo "$BUILD_OUTPUT" | grep -q "hash mismatch"; then
+    SERVER_HASH=$(extract_hash "$BUILD_OUTPUT")
+    if [ -n "$SERVER_HASH" ]; then
+        echo "✅ Found server hash: $SERVER_HASH"
+        # Update the server hash (second occurrence)
+        sed -i.bak "0,/hash = \"sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"/! s/hash = \"sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"/hash = \"$SERVER_HASH\"/" "$VSCODE_CONFIG"
+        rm -f "$VSCODE_CONFIG.bak"
+    fi
+fi
+
+# Second build attempt - will fail but give us main VS Code hash
+echo "� Getting main VS Code hash..."
+MAIN_HASH=""
+BUILD_OUTPUT=$(nix build .#darwinConfigurations.TobiasMacbookPro.config.home-manager.users.ts.programs.vscode.package --log-format raw 2>&1 || true)
+
+if echo "$BUILD_OUTPUT" | grep -q "hash mismatch"; then
+    MAIN_HASH=$(extract_hash "$BUILD_OUTPUT")
+    if [ -n "$MAIN_HASH" ]; then
+        echo "✅ Found main hash: $MAIN_HASH"
+        # Update the main hash (first occurrence)
+        sed -i.bak "0,/hash = \"sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"/ s/hash = \"sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"/hash = \"$MAIN_HASH\"/" "$VSCODE_CONFIG"
+        rm -f "$VSCODE_CONFIG.bak"
+    fi
+fi
+
+# Final build test
+echo "🔨 Final build test..."
+if nix build .#darwinConfigurations.TobiasMacbookPro.config.home-manager.users.ts.programs.vscode.package --log-format raw; then
+    echo "✅ Build successful!"
+    echo ""
+    echo "🎉 VS Code $LATEST_VERSION is ready!"
+    echo ""
+    echo "📋 To apply the update, run:"
+    echo "   ./bin/apply"
+    echo ""
+    echo "📊 After applying, verify with:"
+    echo "   code --version"
+else
+    echo "❌ Build still failing. Check configuration manually."
+    exit 1
+fi

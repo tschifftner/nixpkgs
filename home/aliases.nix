@@ -14,7 +14,7 @@ in {
     cat = "${bat}/bin/bat";
     du = "${du-dust}/bin/dust";
     g = "${git}/bin/git";
-    wget = "${wget2}/bin/wget2";
+    wget = "${pkgs.wget}/bin/wget";
 
     iCloud = "~/Library/Mobile\\ Documents/com~apple~CloudDocs";
 

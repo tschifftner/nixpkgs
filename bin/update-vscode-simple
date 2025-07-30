@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# VS Code Update Script für nixpkgs
+# Zeigt verfügbare Updates und gibt Anweisungen
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NIXPKGS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+VSCODE_CONFIG="$NIXPKGS_DIR/home/vscode.nix"
+
+echo "🔄 VS Code Update Checker..."
+
+# Get latest version from GitHub API
+echo "🌐 Fetching latest VS Code release from GitHub..."
+LATEST_VERSION=$(curl -s "https://api.github.com/repos/microsoft/vscode/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | head -1 || echo "unknown")
+
+if [ "$LATEST_VERSION" = "unknown" ]; then
+    echo "❌ Failed to fetch latest version information"
+    exit 1
+fi
+
+echo "🚀 Latest VS Code release: $LATEST_VERSION"
+
+# Check current version
+CURRENT_VERSION=$(grep 'version = ".*"' "$VSCODE_CONFIG" | sed -E 's/.*version = "([^"]+)".*/\1/' | head -1 || echo "unknown")
+echo "📋 Current version in config: $CURRENT_VERSION"
+
+# Check installed version
+INSTALLED_VERSION=$(code --version 2>/dev/null | head -1 || echo "not installed")
+echo "📋 Currently installed: $INSTALLED_VERSION"
+
+if [ "$CURRENT_VERSION" = "$LATEST_VERSION" ]; then
+    echo "✅ Configuration is up to date!"
+
+    if [ "$INSTALLED_VERSION" != "$LATEST_VERSION" ]; then
+        echo "🔄 But installation needs update. Run:"
+        echo "   ./bin/apply"
+    else
+        echo "✅ Everything is up to date!"
+    fi
+else
+    echo "⚡ Update available: $CURRENT_VERSION → $LATEST_VERSION"
+    echo ""
+    echo "🔧 For automated update with hash calculation:"
+    echo "   ./bin/update-vscode-latest"
+    echo ""
+    echo "📝 Or update manually:"
+    echo "   1. Edit home/vscode.nix"
+    echo "   2. Update version to $LATEST_VERSION"
+    echo "   3. Run ./bin/apply"
+fi

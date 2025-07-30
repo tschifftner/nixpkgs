@@ -105,7 +105,7 @@
       mosh # wrapper for `ssh` that better and not dropping connections
       unrar # extract RAR archives
       upterm # secure terminal sharing
-      wget2 # Faster than wget
+      wget # Stable wget instead of wget2 (build issues)
       xz # extract XZ archives
     ;
 
@@ -126,7 +126,7 @@
     ;
 
     # Kubernetes stuff
-    inherit (pkgs) 
+    inherit (pkgs)
       kustomize # tool for customizing Kubernetes YAML configurations
       kubernetes-helm # Helm package manager for Kubernetes
       kubectl # command line tool for interacting with Kubernetes clusters
@@ -155,8 +155,7 @@
     ;
 
   } // lib.optionalAttrs pkgs.stdenv.isDarwin {
-    inherit (pkgs) 
-      m-cli # useful macOS CLI commands
+    inherit (pkgs) m-cli # useful macOS CLI commands
     ;
   });
 }

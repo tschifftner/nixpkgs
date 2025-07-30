@@ -4,31 +4,34 @@ let
   # Custom VS Code package with LATEST version directly from Microsoft
   # This overrides the nixpkgs version with the newest release
   vscode-latest = pkgs.vscode.overrideAttrs (oldAttrs: rec {
-    version = "1.102.2";  # Latest version as of July 28, 2025
-    
-    # Update the rev for VS Code Remote SSH
-    rev = "c306e94f98122556ca081f527b466015e1bc37b0";  # commit for 1.102.2
-    
+    version = "1.102.3"; # Latest version as of July 30, 2025
+
+    # Update the rev for VS Code Remote SSH - correct commit hash for 1.102.3
+    rev = "488a1f239235055e34e673291fb8d8c810886f81"; # commit for 1.102.3
+
     src = pkgs.fetchurl {
       name = "VSCode_${version}_darwin-arm64.zip";
-      url = "https://update.code.visualstudio.com/${version}/darwin-arm64/stable";
-      # Hash for VS Code 1.102.2 darwin-arm64
-      hash = "sha256-c64gB5t0U0glgcfMlCvVBphQ3rsX758vCUFPVNWqTJY=";
+      url =
+        "https://update.code.visualstudio.com/${version}/darwin-arm64/stable";
+      # Hash for VS Code 1.102.3 darwin-arm64
+      hash = "sha256-29i/+mz0NCU0ZCO+tzlbSl1iKx5/H89bGQTvRR5/PuA=";
     };
-    
+
     # Update vscode server for Remote SSH
     vscodeServer = pkgs.srcOnly {
       name = "vscode-server-${rev}.tar.gz";
       src = pkgs.fetchurl {
         name = "vscode-server-${rev}.tar.gz";
-        url = "https://update.code.visualstudio.com/commit:${rev}/server-linux-x64/stable";
-        hash = "sha256-tvbyqgH8nF0mui0UnDAvN2LdjcB8GQVbSg48cwe6BFA=";
+        url =
+          "https://update.code.visualstudio.com/commit:${rev}/server-linux-x64/stable";
+        hash = "sha256-xVYG/EJRPRJBj3BSarTwpX9F1UM/OI+7ci6vQa64iWI=";
       };
       stdenv = pkgs.stdenvNoCC;
     };
-    
+
     meta = oldAttrs.meta // {
-      description = "VS Code ${version} - Latest release directly from Microsoft";
+      description =
+        "VS Code ${version} - Latest release directly from Microsoft";
       longDescription = ''
         Visual Studio Code ${version} compiled directly from Microsoft releases.
         This bypasses nixpkgs delays and always gets the newest version.
@@ -36,107 +39,105 @@ let
       '';
     };
   });
-in
-{
+in {
   programs.vscode = {
     enable = true;
     package = vscode-latest;
 
-    profiles.default.extensions = 
-      (with pkgs.vscode-extensions; [
-        github.github-vscode-theme
-        bbenoist.nix
-        brettm12345.nixfmt-vscode
-        ibm.output-colorizer
-        dotjoshjohnson.xml
-        redhat.vscode-yaml
-        mkhl.direnv
-        formulahendry.code-runner
-        usernamehw.errorlens
-        github.copilot
-        github.copilot-chat
+    profiles.default.extensions = (with pkgs.vscode-extensions; [
+      github.github-vscode-theme
+      bbenoist.nix
+      brettm12345.nixfmt-vscode
+      ibm.output-colorizer
+      dotjoshjohnson.xml
+      redhat.vscode-yaml
+      mkhl.direnv
+      formulahendry.code-runner
+      usernamehw.errorlens
+      github.copilot
+      github.copilot-chat
 
-        # vscode theme
-        pkief.material-icon-theme
-        github.github-vscode-theme
+      # vscode theme
+      pkief.material-icon-theme
+      github.github-vscode-theme
 
-        # general
-        editorconfig.editorconfig
-        yzhang.markdown-all-in-one
-        ibm.output-colorizer
-        christian-kohler.path-intellisense
+      # general
+      editorconfig.editorconfig
+      yzhang.markdown-all-in-one
+      ibm.output-colorizer
+      christian-kohler.path-intellisense
 
-        # Prettier
-        esbenp.prettier-vscode
+      # Prettier
+      esbenp.prettier-vscode
 
-        # html
-        formulahendry.auto-close-tag
-        formulahendry.auto-rename-tag
-        vincaslt.highlight-matching-tag
+      # html
+      formulahendry.auto-close-tag
+      formulahendry.auto-rename-tag
+      vincaslt.highlight-matching-tag
 
-        # Javascipt / Typescript
-        mikestead.dotenv
-        dbaeumer.vscode-eslint
-        prisma.prisma
+      # Javascipt / Typescript
+      mikestead.dotenv
+      dbaeumer.vscode-eslint
+      prisma.prisma
 
-        # Tailwind
-        bradlc.vscode-tailwindcss
+      # Tailwind
+      bradlc.vscode-tailwindcss
 
-        # bash
-        mads-hartmann.bash-ide-vscode
-        foxundermoon.shell-format
-        timonwong.shellcheck
+      # bash
+      mads-hartmann.bash-ide-vscode
+      foxundermoon.shell-format
+      timonwong.shellcheck
 
-        # Rest
-        humao.rest-client
+      # Rest
+      humao.rest-client
 
-        # Python dev
-        # ms-python.python
-        # ms-python.vscode-pylance
-        # charliermarsh.ruff
+      # Python dev
+      # ms-python.python
+      # ms-python.vscode-pylance
+      # charliermarsh.ruff
 
-        # ms-toolsai.jupyter
-        # ms-toolsai.vscode-jupyter-slideshow
-        # ms-toolsai.jupyter-renderers
-        # ms-toolsai.jupyter-keymap
-        # ms-toolsai.vscode-jupyter-cell-tags
+      # ms-toolsai.jupyter
+      # ms-toolsai.vscode-jupyter-slideshow
+      # ms-toolsai.jupyter-renderers
+      # ms-toolsai.jupyter-keymap
+      # ms-toolsai.vscode-jupyter-cell-tags
 
-        # RPA
-        #robocorp.robocorp-code
-        #robocorp.robotframework-lsp
+      # RPA
+      #robocorp.robocorp-code
+      #robocorp.robotframework-lsp
 
-        # Marketplace-Block-Migration
-        visualstudioexptteam.vscodeintellicode
-        biomejs.biome
-        tamasfe.even-better-toml
-        bierner.markdown-mermaid
-      ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-        {
-          # quickly convert text to and from various formats (Encode/Decode)
-          name = "ecdc";
-          publisher = "mitchdenny";
-          version = "1.8.0";
-          sha256 = "sha256-W2WlngFC5pAAjkj4lQNR5yPJZiedkjqGZHldjx8m7IU=";
-        }
-        {
-          name = "vscode-typescript-next";
-          publisher = "ms-vscode";
-          version = "5.9.20250702";
-          sha256 = "sha256-SASBHJtk4c6MedieH75K1Xl1F5c212x9og0R9IigVd4=";
-        }
-        {
-          name = "playwright";
-          publisher = "ms-playwright";
-          version = "1.1.15"; # Stand: 4.6.2025
-          sha256 = "sha256-1fdUyzJitFfl/cVMOjEiuBS/+FTGttilXoZ8txZMmVs=";
-        }
-        # {
-        #   name = "geminicodeassist";
-        #   publisher = "Google";
-        #   version = "0.5.1";
-        #   sha256 = ""; # Bitte nach erstem Build mit dem richtigen Hash ersetzen
-        # }
-      ];
+      # Marketplace-Block-Migration
+      visualstudioexptteam.vscodeintellicode
+      biomejs.biome
+      tamasfe.even-better-toml
+      bierner.markdown-mermaid
+    ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+      {
+        # quickly convert text to and from various formats (Encode/Decode)
+        name = "ecdc";
+        publisher = "mitchdenny";
+        version = "1.102.3";
+        sha256 = "sha256-W2WlngFC5pAAjkj4lQNR5yPJZiedkjqGZHldjx8m7IU=";
+      }
+      {
+        name = "vscode-typescript-next";
+        publisher = "ms-vscode";
+        version = "1.102.3";
+        sha256 = "sha256-SASBHJtk4c6MedieH75K1Xl1F5c212x9og0R9IigVd4=";
+      }
+      {
+        name = "playwright";
+        publisher = "ms-playwright";
+        version = "1.102.3"; # Stand: 4.6.2025
+        sha256 = "sha256-1fdUyzJitFfl/cVMOjEiuBS/+FTGttilXoZ8txZMmVs=";
+      }
+      # {
+      #   name = "geminicodeassist";
+      #   publisher = "Google";
+      #   version = "1.102.3";
+      #   sha256 = ""; # Bitte nach erstem Build mit dem richtigen Hash ersetzen
+      # }
+    ];
 
     profiles.default.userSettings = {
       geminicodeassist.updateChannel = "Insiders";
@@ -174,6 +175,7 @@ in
       #   };
       # };
 
+      biome.enabled = false;
 
       editor = {
         fontFamily =
@@ -182,10 +184,10 @@ in
         inlineSuggest.enabled = true;
         bracketPairColorization.enabled = true;
         formatOnSave = true;
-        defaultFormatter = "biomejs.biome";
-        codeActionsOnSave = { 
-          source.organizeImports = "explicit"; 
-          quickfix.biome = "explicit"; 
+        # defaultFormatter = "biomejs.biome";
+        codeActionsOnSave = {
+          source.organizeImports = "explicit";
+          # quickfix.biome = "explicit"; 
         };
       };
 
@@ -217,7 +219,7 @@ in
       };
 
       window.menuBarVisibility = "toggle";
-      
+
       # GitHub Copilot Chat
       chat.tools.autoApprove = true;
       github.copilot.chat.languageContext.inline.typescript.enabled = true;
@@ -226,7 +228,7 @@ in
       github.copilot.chat.languageContext.fix.typescript.enabled = true;
       github.copilot.chat.localeOverride = "de";
       chat.agent.maxRequests = 500;
-      
+
       files.exclude = {
         "**/.git" = true;
         "**/.svn" = true;
