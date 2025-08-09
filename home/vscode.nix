@@ -4,17 +4,17 @@ let
   # Custom VS Code package with LATEST version directly from Microsoft
   # This overrides the nixpkgs version with the newest release
   vscode-latest = pkgs.vscode.overrideAttrs (oldAttrs: rec {
-    version = "1.102.3"; # Latest version as of July 30, 2025
+    version = "1.103.0"; # Latest version as of August 8, 2025
 
-    # Update the rev for VS Code Remote SSH - correct commit hash for 1.102.3
-    rev = "488a1f239235055e34e673291fb8d8c810886f81"; # commit for 1.102.3
+    # Update the rev for VS Code Remote SSH - correct commit hash for 1.103.0
+    rev = "e3550cfac4b63ca4eafca7b601f0d2885817fd1f"; # commit for 1.103.0
 
     src = pkgs.fetchurl {
       name = "VSCode_${version}_darwin-arm64.zip";
       url =
         "https://update.code.visualstudio.com/${version}/darwin-arm64/stable";
-      # Hash for VS Code 1.102.3 darwin-arm64
-      hash = "sha256-29i/+mz0NCU0ZCO+tzlbSl1iKx5/H89bGQTvRR5/PuA=";
+      hash =
+        "sha256-2H44MkP7Vv+j78DxGWROHCPdMQv2WzTrG1I7LANMYqg="; # macOS arm64 archive hash remains unchanged
     };
 
     # Update vscode server for Remote SSH
@@ -24,7 +24,8 @@ let
         name = "vscode-server-${rev}.tar.gz";
         url =
           "https://update.code.visualstudio.com/commit:${rev}/server-linux-x64/stable";
-        hash = "sha256-xVYG/EJRPRJBj3BSarTwpX9F1UM/OI+7ci6vQa64iWI=";
+        hash =
+          "sha256-GEN8WMPaYhwQsgml3tXWJP7F4RXH5vy6Ht0RUGauxnw="; # updated server hash for 1.103.0
       };
       stdenv = pkgs.stdenvNoCC;
     };
@@ -35,7 +36,7 @@ let
       longDescription = ''
         Visual Studio Code ${version} compiled directly from Microsoft releases.
         This bypasses nixpkgs delays and always gets the newest version.
-        Updated: July 28, 2025
+        Updated: August 8, 2025
       '';
     };
   });
@@ -116,25 +117,25 @@ in {
         # quickly convert text to and from various formats (Encode/Decode)
         name = "ecdc";
         publisher = "mitchdenny";
-        version = "1.102.3";
+        version = "1.103.0";
         sha256 = "sha256-W2WlngFC5pAAjkj4lQNR5yPJZiedkjqGZHldjx8m7IU=";
       }
       {
         name = "vscode-typescript-next";
         publisher = "ms-vscode";
-        version = "1.102.3";
+        version = "1.103.0";
         sha256 = "sha256-SASBHJtk4c6MedieH75K1Xl1F5c212x9og0R9IigVd4=";
       }
       {
         name = "playwright";
         publisher = "ms-playwright";
-        version = "1.102.3"; # Stand: 4.6.2025
+        version = "1.103.0"; # Stand: 4.6.2025
         sha256 = "sha256-1fdUyzJitFfl/cVMOjEiuBS/+FTGttilXoZ8txZMmVs=";
       }
       # {
       #   name = "geminicodeassist";
       #   publisher = "Google";
-      #   version = "1.102.3";
+      #   version = "1.103.0";
       #   sha256 = ""; # Bitte nach erstem Build mit dem richtigen Hash ersetzen
       # }
     ];
