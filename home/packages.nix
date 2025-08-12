@@ -123,6 +123,7 @@
       biome # JavaScript and TypeScript linter, formatter, and bundler
       firebase-tools # command line tools for Firebase
       docker-compose # tool for defining and running multi-container Docker applications
+      concurrently # run commands concurrently
     ;
 
     # Kubernetes stuff
