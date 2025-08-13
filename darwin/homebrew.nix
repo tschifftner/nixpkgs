@@ -68,7 +68,6 @@ in {
     "thorium"
     "thunderbird"
     "whatsapp"
-    "visual-studio-code-insiders"
     "canva"
     "claude"
   ];
