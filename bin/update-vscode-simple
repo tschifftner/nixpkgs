@@ -11,9 +11,17 @@ VSCODE_CONFIG="$NIXPKGS_DIR/home/vscode.nix"
 
 echo "🔄 VS Code Update Checker..."
 
-# Get latest version from GitHub API
-echo "🌐 Fetching latest VS Code release from GitHub..."
-LATEST_VERSION=$(curl -s "https://api.github.com/repos/microsoft/vscode/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | head -1 || echo "unknown")
+# Get latest version from Microsoft SHA API (more reliable than GitHub API)
+echo "🌐 Fetching latest VS Code release from Microsoft..."
+VSCODE_API_RESPONSE=$(curl -fsSL "https://code.visualstudio.com/sha?build=stable" 2>/dev/null || echo "")
+
+if [ -z "$VSCODE_API_RESPONSE" ]; then
+    echo "❌ Failed to fetch VS Code release information from Microsoft API"
+    echo "🔄 Trying GitHub API as fallback..."
+    LATEST_VERSION=$(curl -s "https://api.github.com/repos/microsoft/vscode/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/' | head -1 || echo "unknown")
+else
+    LATEST_VERSION=$(echo "$VSCODE_API_RESPONSE" | jq -r '.products[0].productVersion' 2>/dev/null || echo "unknown")
+fi
 
 if [ "$LATEST_VERSION" = "unknown" ]; then
     echo "❌ Failed to fetch latest version information"
@@ -42,11 +50,14 @@ if [ "$CURRENT_VERSION" = "$LATEST_VERSION" ]; then
 else
     echo "⚡ Update available: $CURRENT_VERSION → $LATEST_VERSION"
     echo ""
-    echo "🔧 For automated update with hash calculation:"
+    echo "🔧 For automated update with hash calculation (recommended):"
     echo "   ./bin/update-vscode-latest"
     echo ""
     echo "📝 Or update manually:"
     echo "   1. Edit home/vscode.nix"
     echo "   2. Update version to $LATEST_VERSION"
-    echo "   3. Run ./bin/apply"
+    echo "   3. Update hashes using Microsoft SHA API"
+    echo "   4. Run ./bin/apply"
+    echo ""
+    echo "💡 The automated script uses Microsoft's official SHA API for reliable hash calculation."
 fi

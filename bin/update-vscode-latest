@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # VS Code Hash Fixer and Update Script
-# Fixes missing hashes and updates VS Code to latest version
+# Uses official Microsoft SHA API for reliable hash calculation
 
 set -euo pipefail
 
@@ -9,121 +9,125 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NIXPKGS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 VSCODE_CONFIG="$NIXPKGS_DIR/home/vscode.nix"
 
-echo "🚀 VS Code Hash Fixer and Update Script"
+echo "🚀 VS Code Update Script (using Microsoft SHA API)"
 
-# Helper to resolve real commit SHA of a tag (annotated or lightweight)
-resolve_commit() {
-    local tag="$1"
-    # Try to get peeled commit (^{}) first (works for annotated tag)
-    local peeled
-    peeled=$(git ls-remote https://github.com/microsoft/vscode.git "refs/tags/${tag}^{}" 2>/dev/null | awk '{print $1}' || true)
-    if [ -n "${peeled}" ]; then
-        echo "$peeled"
-        return 0
-    fi
-    # Fallback: lightweight tag sha
-    local direct
-    direct=$(git ls-remote https://github.com/microsoft/vscode.git "refs/tags/${tag}" 2>/dev/null | awk '{print $1}' || true)
-    if [ -n "${direct}" ]; then
-        echo "$direct"
-        return 0
-    fi
-    return 1
-}
-
-# Extract current version
+# Extract current version from config
 CURRENT_VERSION=$(grep 'version = "' "$VSCODE_CONFIG" | sed -E 's/.*version = "([^"]+)".*/\1/' | head -1 || true)
 echo "📋 Current version in config: ${CURRENT_VERSION:-unknown}"
 
-# Latest release tag
-echo "🌐 Fetching latest VS Code release tag..."
-LATEST_VERSION=$(curl -fsSL "https://api.github.com/repos/microsoft/vscode/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^\"]+)".*/\1/' | head -1 || true)
-if [ -z "${LATEST_VERSION}" ]; then
-    echo "❌ Could not get latest version tag"
+# Get latest release info from Microsoft SHA API
+echo "🌐 Fetching latest VS Code release info from Microsoft..."
+VSCODE_API_RESPONSE=$(curl -fsSL "https://code.visualstudio.com/sha?build=stable")
+
+if [ -z "$VSCODE_API_RESPONSE" ]; then
+    echo "❌ Could not fetch VS Code release information"
     exit 1
 fi
 
-echo "🆕 Latest version tag: $LATEST_VERSION"
+# Parse version, commit hash, and macOS ARM64 hash from API response
+LATEST_VERSION=$(echo "$VSCODE_API_RESPONSE" | jq -r '.products[0].productVersion')
+COMMIT_SHA=$(echo "$VSCODE_API_RESPONSE" | jq -r '.products[0].version')
+MACOS_ARM64_HASH=$(echo "$VSCODE_API_RESPONSE" | jq -r '.products[] | select(.platform.os == "darwin-arm64") | .sha256hash')
 
-# Resolve commit for tag (instead of using target_commitish which is usually 'main')
-echo "🔍 Resolving commit for tag $LATEST_VERSION ..."
-COMMIT_SHA=$(resolve_commit "$LATEST_VERSION" || true)
-if [ -z "$COMMIT_SHA" ]; then
-    echo "⚠️  Could not resolve commit from git, falling back to target_commitish (may be 'main')."
-    COMMIT_SHA=$(curl -fsSL "https://api.github.com/repos/microsoft/vscode/releases/latest" | grep -o '"target_commitish": "[^"]*"' | cut -d '"' -f4 || echo "main")
+echo "🆕 Latest version: $LATEST_VERSION"
+echo "📝 Commit SHA: $COMMIT_SHA"
+echo "🍎 macOS ARM64 hash: sha256-$(echo -n "$MACOS_ARM64_HASH" | xxd -r -p | base64)"
+
+if [ -z "$LATEST_VERSION" ] || [ -z "$COMMIT_SHA" ] || [ -z "$MACOS_ARM64_HASH" ]; then
+    echo "❌ Could not extract required information from API"
+    exit 1
 fi
 
-echo "📝 Commit SHA: $COMMIT_SHA"
+# Convert hex hash to base64 for Nix
+MACOS_ARM64_NIX_HASH="sha256-$(echo -n "$MACOS_ARM64_HASH" | xxd -r -p | base64)"
 
-if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
-    echo "⚡ Updating version $CURRENT_VERSION → $LATEST_VERSION"
-    sed -i.bak "s/version = \".*\";/version = \"$LATEST_VERSION\";/" "$VSCODE_CONFIG"
-    sed -i.bak "s/rev = \".*\";/rev = \"$COMMIT_SHA\";/" "$VSCODE_CONFIG"
-    rm -f "$VSCODE_CONFIG.bak"
-else
-    # Still ensure commit updated if changed
-    if ! grep -q "rev = \"$COMMIT_SHA\";" "$VSCODE_CONFIG"; then
-        echo "♻️  Updating commit rev to $COMMIT_SHA"
+# Check if update is needed
+if [ "$CURRENT_VERSION" = "$LATEST_VERSION" ]; then
+    echo "✅ Already at latest version!"
+    # Still check if commit hash needs updating
+    CURRENT_REV=$(grep 'rev = "' "$VSCODE_CONFIG" | sed -E 's/.*rev = "([^"]+)".*/\1/' | head -1 || true)
+    if [ "$CURRENT_REV" != "$COMMIT_SHA" ]; then
+        echo "♻️  Updating commit hash to latest..."
         sed -i.bak "s/rev = \".*\";/rev = \"$COMMIT_SHA\";/" "$VSCODE_CONFIG"
         rm -f "$VSCODE_CONFIG.bak"
     fi
+
+    # Check if hash needs updating
+    if ! grep -q "$MACOS_ARM64_NIX_HASH" "$VSCODE_CONFIG"; then
+        echo "♻️  Updating macOS hash..."
+        # Update the first hash (main VS Code archive)
+        awk -v hash="$MACOS_ARM64_NIX_HASH" '
+            !done && /hash =/ && /sha256-/ {
+                gsub(/sha256-[A-Za-z0-9+\/=]+/, hash)
+                done = 1
+            }
+            { print }
+        ' "$VSCODE_CONFIG" >"$VSCODE_CONFIG.tmp" && mv "$VSCODE_CONFIG.tmp" "$VSCODE_CONFIG"
+    fi
+else
+    echo "⚡ Updating version $CURRENT_VERSION → $LATEST_VERSION"
+
+    # Update version and commit
+    sed -i.bak "s/version = \".*\";/version = \"$LATEST_VERSION\";/" "$VSCODE_CONFIG"
+    sed -i.bak "s/rev = \".*\";/rev = \"$COMMIT_SHA\";/" "$VSCODE_CONFIG"
+    rm -f "$VSCODE_CONFIG.bak"
+
+    # Update main VS Code hash
+    echo "🔨 Updating macOS ARM64 hash..."
+    awk -v hash="$MACOS_ARM64_NIX_HASH" '
+        !done && /hash =/ && /sha256-/ {
+            gsub(/sha256-[A-Za-z0-9+\/=]+/, hash)
+            done = 1
+        }
+        { print }
+    ' "$VSCODE_CONFIG" >"$VSCODE_CONFIG.tmp" && mv "$VSCODE_CONFIG.tmp" "$VSCODE_CONFIG"
 fi
 
-# Reset both hashes to placeholder
-PLACEHOLDER="sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
-echo "🔨 Resetting hashes to placeholder to trigger mismatch..."
-sed -i.bak 's/hash = "sha256-[^"]*"/hash = "'$PLACEHOLDER'"/g' "$VSCODE_CONFIG"
-rm -f "$VSCODE_CONFIG.bak"
-
+# Now handle the VS Code server hash
+echo "🖥  Determining VS Code Server hash..."
 cd "$NIXPKGS_DIR"
 
-extract_hash() {
-    local build_output="$1"
-    echo "$build_output" | grep -E "got:\s+sha256-[A-Za-z0-9+/=]+" | tail -1 | sed -E 's/.*got:[[:space:]]+(sha256-[A-Za-z0-9+/=]+).*/\1/'
-}
-
-# 1) First build -> main VS Code archive hash mismatch (first occurrence)
-echo "📦 Determining main VS Code hash..."
-MAIN_HASH=""
+# Try to build to get the server hash mismatch
 BUILD_OUTPUT=$(nix build .#darwinConfigurations.TobiasMacbookPro.config.home-manager.users.ts.programs.vscode.package --log-format raw 2>&1 || true)
+
 if echo "$BUILD_OUTPUT" | grep -q "hash mismatch"; then
-    MAIN_HASH=$(extract_hash "$BUILD_OUTPUT")
-fi
-if [ -n "$MAIN_HASH" ]; then
-    echo "✅ Main hash: $MAIN_HASH"
-    # Replace first occurrence only
-    sed -i.bak "0,/hash = \"$PLACEHOLDER\"/ s/hash = \"$PLACEHOLDER\"/hash = \"$MAIN_HASH\"/" "$VSCODE_CONFIG"
-    rm -f "$VSCODE_CONFIG.bak"
+    SERVER_HASH=$(echo "$BUILD_OUTPUT" | grep -E "got:\s+sha256-[A-Za-z0-9+/=]+" | tail -1 | sed -E 's/.*got:[[:space:]]+(sha256-[A-Za-z0-9+/=]+).*/\1/')
+
+    if [ -n "$SERVER_HASH" ]; then
+        echo "✅ VS Code Server hash: $SERVER_HASH"
+
+        # Update the VS Code server hash (second occurrence)
+        python3 <<EOF
+import re
+
+with open("$VSCODE_CONFIG", 'r') as f:
+    content = f.read()
+
+# Update server hash using more precise regex
+content = re.sub(
+    r'(vscodeServer.*?hash =\s*\n\s*)"sha256-[A-Za-z0-9+/=]+";(\s*#.*)',
+    rf'\1"$SERVER_HASH";\2',
+    content,
+    flags=re.MULTILINE | re.DOTALL
+)
+
+with open("$VSCODE_CONFIG", 'w') as f:
+    f.write(content)
+EOF
+    else
+        echo "❌ Could not extract server hash"
+        exit 1
+    fi
 else
-    echo "❌ Could not extract main hash"
-    echo "$BUILD_OUTPUT" | tail -n 50
-    exit 1
+    echo "✅ VS Code server hash already up to date"
 fi
 
-# 2) Second build -> VS Code server hash mismatch (second occurrence)
-echo "🖥  Determining VS Code Server hash (Remote SSH)..."
-SERVER_HASH=""
-BUILD_OUTPUT=$(nix build .#darwinConfigurations.TobiasMacbookPro.config.home-manager.users.ts.programs.vscode.package --log-format raw 2>&1 || true)
-if echo "$BUILD_OUTPUT" | grep -q "hash mismatch"; then
-    SERVER_HASH=$(extract_hash "$BUILD_OUTPUT")
-fi
-if [ -n "$SERVER_HASH" ]; then
-    echo "✅ Server hash: $SERVER_HASH"
-    # Replace second occurrence (skip first)
-    sed -i.bak "0,/hash = \"$MAIN_HASH\"/! s/hash = \"$PLACEHOLDER\"/hash = \"$SERVER_HASH\"/" "$VSCODE_CONFIG"
-    rm -f "$VSCODE_CONFIG.bak"
-else
-    echo "❌ Could not extract server hash"
-    echo "$BUILD_OUTPUT" | tail -n 50
-    exit 1
-fi
-
-# 3) Final build check
-echo "🔨 Final build..."
+# Final build test
+echo "🔨 Final build test..."
 if nix build .#darwinConfigurations.TobiasMacbookPro.config.home-manager.users.ts.programs.vscode.package --log-format raw; then
-    echo "🎉 VS Code $LATEST_VERSION (commit $COMMIT_SHA) ready."
+    echo "🎉 VS Code $LATEST_VERSION (commit $COMMIT_SHA) ready!"
     echo "👉 Run ./bin/apply to apply system configuration."
 else
-    echo "❌ Final build failed. Please inspect above logs."
+    echo "❌ Final build failed. Please check the configuration."
     exit 1
 fi
