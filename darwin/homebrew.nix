@@ -35,7 +35,7 @@ in {
   # Preferences for apps like VS Code Insiders). If you want automatic
   # cleanup of orphaned brew files you can change this to "uninstall",
   # but avoid "zap" which deletes user data.
-  homebrew.onActivation.cleanup = "none";
+  homebrew.onActivation.cleanup = "uninstall";
   homebrew.global.brewfile = true;
 
   homebrew.taps = [
