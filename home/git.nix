@@ -6,22 +6,22 @@
   # Aliases config in ./configs/git-aliases.nix
   programs.git.enable = true;
 
-  programs.git.extraConfig = {
+  programs.git.settings = {
     diff.colorMoved = "default";
     pull.rebase = true;
     init = { defaultBranch = "main"; };
     push.autoSetupRemote = true;
+    user.email = "tobias" + "@" + "schifftner.de";
+    user.name = "Tobias Schifftner";
   };
 
   programs.git.ignores = [ ".DS_Store" ".tmp" ];
 
-  programs.git.userEmail = "tobias" + "@" + "schifftner.de";
-  programs.git.userName = "Tobias Schifftner";
-
   # Enhanced diffs
-  programs.git.diff-so-fancy.enable = true;
-  programs.git.diff-so-fancy.changeHunkIndicators = true;
-  programs.git.diff-so-fancy.markEmptyLines = true;
+  programs.diff-so-fancy.enable = true;
+  programs.diff-so-fancy.settings.changeHunkIndicators = true;
+  programs.diff-so-fancy.settings.markEmptyLines = true;
+  programs.diff-so-fancy.enableGitIntegration = true;
 
   # GitHub CLI
   # https://rycee.gitlab.io/home-manager/options.html#opt-programs.gh.enable

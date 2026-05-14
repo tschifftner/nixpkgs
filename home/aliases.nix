@@ -12,7 +12,7 @@ in {
     ":q" = "exit";
 
     cat = "${bat}/bin/bat";
-    du = "${du-dust}/bin/dust";
+    du = "${dust}/bin/dust";
     g = "${git}/bin/git";
     wget = "${pkgs.wget}/bin/wget";
 

@@ -29,7 +29,7 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    nixfmt-classic
+    nixfmt-rfc-style
     dnsutils # `dig` + `nslookup`
     raycast
     iterm2

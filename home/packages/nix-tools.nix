@@ -9,7 +9,6 @@
     nix-tree              # Interactively browse dependency graphs of Nix derivations
     nix-update            # Swiss-knife for updating nix packages
     nixpkgs-review        # Review pull-requests on nixpkgs
-    node2nix              # Generate Nix expressions to build NPM packages
     statix                # Lints and suggestions for the Nix programming language
   ];
 }
