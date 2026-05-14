@@ -90,7 +90,8 @@
   # Some options also set in `../darwin/homebrew.nix`.
   programs.ssh.enable = true;
   # ensures the path is unique but also fixed length
-  programs.ssh.controlPath = "~/.ssh/%C";
+  programs.ssh.matchBlocks."*".controlPath = "~/.ssh/%C";
+  programs.ssh.enableDefaultConfig = false;
 
   # Zoxide, a faster way to navigate the filesystem
   # https://github.com/ajeetdsouza/zoxide

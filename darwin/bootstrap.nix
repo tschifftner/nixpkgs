@@ -16,7 +16,7 @@
 
     experimental-features = [ "nix-command" "flakes" ];
 
-    extra-platforms = lib.mkIf (pkgs.system == "aarch64-darwin") [
+    extra-platforms = lib.mkIf (pkgs.stdenv.hostPlatform.system == "aarch64-darwin") [
       "x86_64-darwin"
       "aarch64-darwin"
     ];
@@ -29,7 +29,7 @@
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
-    nixfmt-classic
+    nixfmt
     dnsutils # `dig` + `nslookup`
     raycast
     iterm2

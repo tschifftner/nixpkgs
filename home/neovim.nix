@@ -14,6 +14,8 @@ let
 in {
   programs.neovim = {
     enable = true;
+    withRuby = false;
+    withPython3 = false;
     plugins = with pkgs.vimPlugins; [
       nvim-tree-lua
       go-nvim

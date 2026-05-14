@@ -10,7 +10,7 @@
       bandwhich           # Display current network utilization by process
       coreutils           # The GNU Core Utilities
       curl                # Transferring files with URL syntax
-      du-dust             # Fancy version of `du`
+      dust                # Fancy version of `du`
       fd                  # Fancy version of `find`
   # mdcat               # Display markdown files
   # NOTE: mdcat currently fails to build due to a strict-deny warnings

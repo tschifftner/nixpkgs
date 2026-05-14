@@ -13,7 +13,7 @@
     cloc                   # Source code line counter
     
     # Version control
-    gh-copilot            # GitHub Copilot CLI
+    github-copilot-cli    # GitHub Copilot CLI
     
     # Web development
     firebase-tools        # Command line tools for Firebase
