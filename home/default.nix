@@ -19,7 +19,7 @@
     ./ssh.nix
     ./starship.nix
     ./thunderbird.nix
-    ./vscode.nix
+    # VS Code configuration removed - managed via cloud sync
     ./zsh.nix
   ];
 }

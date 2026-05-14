@@ -1,17 +1,70 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
+# Optional safety wrapper: backup VS Code Insiders user data before a system
+# activation that may trigger Homebrew cask zaps. Controlled by
+# KEEP_VSCODE_INSIDERS_BACKUP (default: enabled = 1).
+KEEP_BACKUP=${KEEP_VSCODE_INSIDERS_BACKUP:-1}
+
+backup_paths=("$HOME/Library/Application Support/Code - Insiders" "$HOME/.vscode-insiders")
+backup_dir=""
+
+do_backup() {
+    if [ "${KEEP_BACKUP}" != "1" ]; then
+        return 0
+    fi
+    timestamp=$(date -u +%Y%m%dT%H%M%SZ)
+    backup_dir="/tmp/vscode-insiders-backup-${timestamp}"
+    mkdir -p "$backup_dir"
+    for p in "${backup_paths[@]}"; do
+        if [ -e "$p" ]; then
+            echo "Backing up $p -> $backup_dir"
+            # Use rsync to preserve permissions and handle symlinks
+            rsync -a --delete --exclude 'Cache' --exclude 'CachedData' "$p" "$backup_dir/"
+        fi
+    done
+}
+
+do_restore() {
+    if [ -z "$backup_dir" ] || [ ! -d "$backup_dir" ]; then
+        return 0
+    fi
+    for d in "$backup_dir"/*; do
+        # restore directory contents back to their original locations
+        base=$(basename "$d")
+        # Map known backup folder names back to targets
+        if [ "$base" = "Code - Insiders" ]; then
+            target="$HOME/Library/Application Support/Code - Insiders"
+        else
+            target="$HOME/.vscode-insiders"
+        fi
+        echo "Restoring $d -> $target"
+        mkdir -p "$(dirname "$target")"
+        rsync -a --delete "$d/" "$target/"
+    done
+}
+
 # Check if nix-darwin is installed
 if command -v darwin-rebuild >/dev/null 2>&1; then
-    git add .
-    echo "darwin-rebuild switch --flake . $*"
-    sudo darwin-rebuild switch --flake . "$@"
+        git add .
+        echo "Running darwin-rebuild switch --flake . $*"
+        # Run backup, then activation, then restore on success
+        do_backup || true
+        sudo darwin-rebuild switch --flake . "$@"
+        # Restore backups if any
+        do_restore || true
 else
-    # Command to execute if nix-darwin is not installed
-    echo "darwin-rebuild is not yet installed, build flake with nix"
-    sudo nix build \
-        --no-eval-cache \
-        --show-trace \
-        .#darwinConfigurations.TobiasMacbookPro.system
+        # Command to execute if nix-darwin is not installed
+        echo "darwin-rebuild is not yet installed, build flake with nix"
+        do_backup || true
+        sudo nix build \
+                --no-eval-cache \
+                --show-trace \
+                .#darwinConfigurations.TobiasMacbookPro.system
 
-    sudo ./result/sw/bin/darwin-rebuild switch --flake . "$@"
+        sudo ./result/sw/bin/darwin-rebuild switch --flake . "$@"
+        do_restore || true
 fi
+
+echo "Apply completed. If KEEP_VSCODE_INSIDERS_BACKUP=1 backups were stored in: ${backup_dir:-none}"

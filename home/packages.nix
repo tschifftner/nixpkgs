@@ -1,6 +1,12 @@
 { lib, pkgs, ... }:
 
 {
+  # Import modularized package configurations
+  imports = [
+    ./packages  # All package modules are now organized in ./packages/
+  ];
+
+  # Core program configurations
   # Bat, a substitute for cat.
   # https://github.com/sharkdp/bat
   # https://rycee.gitlab.io/home-manager/options.html#opt-programs.bat.enable
@@ -90,73 +96,4 @@
   # https://github.com/ajeetdsouza/zoxide
   # https://rycee.gitlab.io/home-manager/options.html#opt-programs.zoxide.enable
   programs.zoxide.enable = true;
-
-  home.packages = lib.attrValues ({
-    supabase-cli = pkgs.callPackage ./supabase-cli.nix { };
-
-    # Some cli basics
-    inherit (pkgs)
-      bandwhich # display current network utilization by process
-      coreutils # The GNU Core Utilities
-      curl # Transferring files with URL syntax
-      du-dust # fancy version of `du`
-      fd # fancy version of `find`
-      mdcat # display mardown files
-      mosh # wrapper for `ssh` that better and not dropping connections
-      unrar # extract RAR archives
-      upterm # secure terminal sharing
-      wget # Stable wget instead of wget2 (build issues)
-      xz # extract XZ archives
-    ;
-
-    # Dev stuff
-    inherit (pkgs)
-      cloc # source code line counter
-      gh-copilot # GitHub Copilot CLI
-      nodejs # Node.js runtime
-      s3cmd # command line tool for managing Amazon S3 and CloudFront
-      typescript # TypeScript compiler
-      yq # command-line YAML processor, similar to jq
-      shfmt # shell script formatter
-      colima # container runtime with support for Docker and Kubernetes
-      docker # container runtime
-      biome # JavaScript and TypeScript linter, formatter, and bundler
-      firebase-tools # command line tools for Firebase
-      docker-compose # tool for defining and running multi-container Docker applications
-      concurrently # run commands concurrently
-    ;
-
-    # Kubernetes stuff
-    inherit (pkgs)
-      kustomize # tool for customizing Kubernetes YAML configurations
-      kubernetes-helm # Helm package manager for Kubernetes
-      kubectl # command line tool for interacting with Kubernetes clusters
-      kubectx # switch between Kubernetes clusters easily
-    ;
-
-    # Useful nix related tools
-    inherit (pkgs)
-      cachix # adding/managing alternative binary caches hosted by Cachix
-      comma # run software from without installing it
-      nix-output-monitor # get additional information while building packages
-      nix-tree # interactively browse dependency graphs of Nix derivations
-      nix-update # swiss-knife for updating nix packages
-      nixpkgs-review # review pull-requests on nixpkgs
-      node2nix # generate Nix expressions to build NPM packages
-      statix # lints and suggestions for the Nix programming language
-    ;
-
-    # AI tools
-    inherit (pkgs)
-      ollama # run and manage large language models locally
-      gemini-cli # Google Gemini CLI
-      gpt-cli # CLI für ChatGPT, Claude und Bard
-      code-cursor # AI-powered code completion and navigation
-      claude-code # CLI for Anthropic's Claude AI
-    ;
-
-  } // lib.optionalAttrs pkgs.stdenv.isDarwin {
-    inherit (pkgs) m-cli # useful macOS CLI commands
-    ;
-  });
 }

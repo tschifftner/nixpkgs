@@ -28,7 +28,14 @@ in {
 
   homebrew.enable = true;
   homebrew.onActivation.autoUpdate = true;
-  homebrew.onActivation.cleanup = "zap";
+  # Disable automatic cask zapping. The darwin homebrew module accepts
+  # only specific values for `homebrew.onActivation.cleanup` ("none",
+  # "uninstall", "zap"). Using "none" prevents the activation from
+  # running destructive cask zaps (which remove Application Support/
+  # Preferences for apps like VS Code Insiders). If you want automatic
+  # cleanup of orphaned brew files you can change this to "uninstall",
+  # but avoid "zap" which deletes user data.
+  homebrew.onActivation.cleanup = "none";
   homebrew.global.brewfile = true;
 
   homebrew.taps = [
@@ -70,6 +77,8 @@ in {
     "whatsapp"
     "canva"
     "claude"
+    "visual-studio-code"          # Standard VS Code
+    "visual-studio-code-insiders" # Latest VS Code Insiders build
   ];
 
   # Configuration related to casks
