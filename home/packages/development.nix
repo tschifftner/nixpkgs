@@ -5,6 +5,7 @@
   home.packages = with pkgs; [
     # Core development
     nodejs                  # Node.js runtime
+    python312               # Python 3.12 runtime
     typescript              # TypeScript compiler
     concurrently           # Run commands concurrently
     biome                  # JavaScript and TypeScript linter, formatter, and bundler

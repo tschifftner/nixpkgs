@@ -26,4 +26,9 @@ if [[ ! -L "$HOME/iCloud" ]]; then
 fi
 
 # 1Password Cli
+# Use 1Password SSH agent socket if available so ssh commands see 1Password-managed keys
+if [ -S "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ]; then
+    export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+fi
+
 #eval "$(op signin --account my)" && eval "$(op signin --account ambimax)"

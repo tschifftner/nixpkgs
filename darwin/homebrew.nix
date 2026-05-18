@@ -102,6 +102,8 @@ in {
       home.sessionVariables = {
         #GITHUB_TOKEN = "op://Private/d4kwckaojdngif365gyhukyfre/CLI/token";
         #GITHUB_TOKEN = "op read op://Private/d4kwckaojdngif365gyhukyfre/CLI/token --account my";
+        # Flag indicating plugin aliases were sourced for compat scripts
+        OP_PLUGIN_ALIASES_SOURCED = "1";
         OP_SESSION_TIMEOUT = "1800";
       };
     };

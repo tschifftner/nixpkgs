@@ -1,4 +1,3 @@
-````instructions
 # Personal nixpkgs Configuration
 
 The owner of the GitHub repo is **tschifftner**.
