@@ -15,6 +15,7 @@
     
     # Version control
     github-copilot-cli    # GitHub Copilot CLI
+    agent-browser         # Browser Automation MCP
     
     # Web development
     firebase-tools        # Command line tools for Firebase
