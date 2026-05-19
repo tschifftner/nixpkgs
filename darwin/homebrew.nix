@@ -77,8 +77,8 @@ in {
     "whatsapp"
     "canva"
     "claude"
-    "visual-studio-code"          # Standard VS Code
-    "visual-studio-code-insiders" # Latest VS Code Insiders build
+    "visual-studio-code"                # Standard VS Code
+    "visual-studio-code@insiders"       # Latest VS Code Insiders build (rename in Homebrew)
   ];
 
   # Configuration related to casks
