@@ -35,7 +35,10 @@ in {
   # Preferences for apps like VS Code Insiders). If you want automatic
   # cleanup of orphaned brew files you can change this to "uninstall",
   # but avoid "zap" which deletes user data.
-  homebrew.onActivation.cleanup = "uninstall";
+  # Cleanup deaktiviert – sonst würde brew alle nicht-konfigurierten Formulae/Casks
+  # löschen (z.B. go-task, micro). Nicht-konfigurierte Tools können manuell
+  # mit `brew uninstall` entfernt werden.
+  homebrew.onActivation.cleanup = "none";
   homebrew.global.brewfile = true;
 
   homebrew.taps = [
@@ -48,10 +51,8 @@ in {
   # Prefer installing application from the Mac App Store
   homebrew.masApps = {
     "1Password for Safari" = 1569813296;
-    Slack = 803453959;
     "Tailscale" = 1475387142;
     "Things 3" = 904280696;
-    "Microsoft Remote Desktop" = 1295203466;
   };
 
   # If an app isn't available in the Mac App Store, or the version in the App Store has
@@ -60,25 +61,20 @@ in {
     "keepingyouawake"
     "1password"
     "1password-cli"
-    "amethyst"
     "calibre"
-    "chatbox"
+    "cmux"                              # Terminal multiplexer (replaces ghostty)
+    "cursor"                            # AI-powered code editor
     "firefox"
-    "jdownloader"
     "google-drive"
     "google-chrome"
     "transmit"
-    "devtoys"
     "moneymoney"
     "obsidian"
-    "steam"
-    "thorium"
+    "tolaria"                           # Alternative to Obsidian
     "thunderbird"
     "whatsapp"
-    "canva"
-    "claude"
     "visual-studio-code"                # Standard VS Code
-    "visual-studio-code@insiders"       # Latest VS Code Insiders build (rename in Homebrew)
+    "visual-studio-code@insiders"       # Latest VS Code Insiders build
   ];
 
   # Configuration related to casks

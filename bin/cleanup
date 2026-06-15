@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 sudo rm -rf "$HOME/.cache/nix"
-sudo nix-collect-garbage
+sudo nix-collect-garbage --delete-older-than 30d
 sudo nix-store --verify --check-contents --repair
 sudo nix-store --gc
+sudo nix-store --optimise

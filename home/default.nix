@@ -7,9 +7,7 @@
 
   imports = [
     ./aliases.nix
-    ./bash.nix
     ./config-files.nix
-    ./fish.nix
     ./git-aliases.nix
     ./gh-aliases.nix
     ./git.nix
@@ -19,7 +17,6 @@
     ./ssh.nix
     ./starship.nix
     ./thunderbird.nix
-    # VS Code configuration removed - managed via cloud sync
     ./zsh.nix
   ];
 }

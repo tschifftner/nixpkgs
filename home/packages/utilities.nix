@@ -16,6 +16,7 @@
   # NOTE: mdcat currently fails to build due to a strict-deny warnings
   # lint in its pulldown-cmark-mdcat dependency. Commented out to allow
   # system activation to proceed; re-enable after pinning or patching.
+      go-task             # Task runner (used by Taskfile.yml)
       mosh                # Wrapper for `ssh` that better and not dropping connections
       unrar               # Extract RAR archives
       upterm              # Secure terminal sharing

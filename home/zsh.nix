@@ -42,9 +42,23 @@
       }
     ];
 
+    # Bracketed paste deaktivieren – muss in .zshenv, da zsh bracketed paste
+    # VOR .zshrc initialisiert.
+    envExtra = ''
+      export DISABLE_BRACKETED_PASTE=1
+    '';
+
     # Add nix
     initContent = ''
       ${builtins.readFile ./zsh/custom-zsh.sh}
+
+      # Orbstack integration
+      source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+
+      # Ensure brew shellenv is available (also handled by nix-darwin)
+      if [[ -x /opt/homebrew/bin/brew ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      fi
 
       # Setup bindings for both smkx and rmkx key variants
       # Home

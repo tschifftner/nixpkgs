@@ -1,0 +1,56 @@
+# https://taskfile.dev
+version: '3'
+
+vars:
+  FLAKE: .
+
+tasks:
+
+  validate:
+    desc: "Quick syntax check (~1-2s). Run this BEFORE any apply."
+    cmds:
+      - nix flake check "{{.FLAKE}}"
+    aliases: [v, check]
+
+  apply-system:
+    desc: "FULL system apply. Applies nix-darwin + home-manager + homebrew (requires sudo). Run this when you change darwin/ or need system-level updates."
+    cmds:
+      - task: validate
+      - sudo darwin-rebuild switch --flake "{{.FLAKE}}"
+    aliases: [apply, a]
+
+  apply-home:
+    desc: "QUICK user-only apply. Applies only home-manager (~10-20s). Run this when you ONLY change files in home/."
+    cmds:
+      - task: validate
+      - home-manager switch --flake "{{.FLAKE}}"
+    aliases: [home, hm, s]
+
+  update-all:
+    desc: "Update all flake inputs (nixpkgs, darwin, home-manager) to latest versions, then full system apply."
+    cmds:
+      - nix flake update "{{.FLAKE}}"
+      - task: apply-system
+    aliases: [update, u]
+
+  update-lock:
+    desc: "Update flake lock file WITHOUT applying. Useful to prepare changes before an apply."
+    cmds:
+      - nix flake update "{{.FLAKE}}"
+    aliases: [lock]
+
+  info:
+    desc: "Show current git status and last applied flake metadata."
+    cmds:
+      - echo "=== Git Status ==="
+      - git status --short
+      - echo ""
+      - echo "=== Recent Changes ==="
+      - git log --oneline -5
+    aliases: [status, i]
+
+  cleanup:
+    desc: "Clean up Nix store (garbage collection)."
+    cmds:
+      - nix store gc
+    aliases: [gc]
