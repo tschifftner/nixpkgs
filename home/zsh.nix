@@ -22,13 +22,9 @@
         };
       }
       {
-        name = "fast-syntax-highlighting";
-        src = pkgs.fetchFromGitHub {
-          owner = "zdharma";
-          repo = "fast-syntax-highlighting";
-          rev = "v1.55";
-          sha256 = "0h7f27gz586xxw7cc0wyiv3bx0x3qih2wwh05ad85bh2h834ar8d";
-        };
+        name = "zsh-syntax-highlighting";
+        src = pkgs.zsh-syntax-highlighting;
+        file = "share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh";
       }
       {
         name = "powerlevel10k";
@@ -44,8 +40,13 @@
 
     # Bracketed paste deaktivieren – muss in .zshenv, da zsh bracketed paste
     # VOR .zshrc initialisiert.
+    # POWERLEVEL9K_INSTANT_PROMPT muss VOR powerlevel10k geladen sein (daher in .zshenv).
+    # quiet = Prompt erscheint sofort, Git-Status wird asynchron im Hintergrund geladen.
     envExtra = ''
       export DISABLE_BRACKETED_PASTE=1
+      export POWERLEVEL9K_INSTANT_PROMPT=quiet
+      export RTK_TELEMETRY_DISABLED=1
+      export PI_OFFLINE=1
     '';
 
     # Add nix
@@ -54,11 +55,6 @@
 
       # Orbstack integration
       source ~/.orbstack/shell/init.zsh 2>/dev/null || :
-
-      # Ensure brew shellenv is available (also handled by nix-darwin)
-      if [[ -x /opt/homebrew/bin/brew ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-      fi
 
       # Setup bindings for both smkx and rmkx key variants
       # Home

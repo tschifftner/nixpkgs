@@ -1,47 +1,26 @@
 #!/bin/bash
 
-# export PATH="/Users/ts/.nix-profile/bin:/etc/profiles/per-user/ts/bin:/run/current-system/sw/bin:$PATH"
-export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:/etc/profiles/per-user/ts/bin:/run/current-system/sw/bin:$PATH"
+# PATH – nur die Zusätze, die nicht schon von nix-darwin gesetzt werden
+export PATH="$HOME/.local/bin:$HOME/.local/share/pnpm/bin:$PATH"
+
+# PNPM / NPM Config
 export PNPM_HOME="$HOME/.local/share/pnpm"
 export NPM_CONFIG_PREFIX="$HOME/.local/share/npm"
 export NPM_CONFIG_USERCONFIG="$HOME/.npmrc"
 
-# Home Manager session variables (includes PNPM_HOME and session PATH entries)
-if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-    # shellcheck source=/dev/null
-    . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+# Brew shellenv nur sourcen wenn brew noch nicht im PATH ist
+if ! command -v brew &>/dev/null && [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# Keep pnpm global bin on PATH regardless of session source order
-export PATH="$PNPM_HOME/bin:$PATH"
-
-# Nix
-if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-    # shellcheck source=/dev/null
-    . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-fi
-# End Nix
-
-# Set title for terminal tabs
+# Terminal title
 precmd() {
-    local title
-
-    # Get the current working directory, replacing the home directory with ~
-    title=$(echo "${PWD/#$HOME/~}" | tail -c 25)
-
-    # Set the window title
-    print -Pn "\e]0;$title\a"
+    print -Pn "\e]0;${PWD/#$HOME/~}\a"
 }
 
-# Symlink iCloud
-if [[ ! -L "$HOME/iCloud" ]]; then
-    ln -s "$HOME/Library/Mobile Documents/com~apple~CloudDocs" "$HOME/iCloud"
-fi
+# iCloud symlink (einmalig)
+[[ ! -L "$HOME/iCloud" ]] && ln -sf "$HOME/Library/Mobile Documents/com~apple~CloudDocs" "$HOME/iCloud"
 
-# 1Password Cli
-# Use 1Password SSH agent socket if available so ssh commands see 1Password-managed keys
-if [ -S "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ]; then
+# 1Password SSH agent
+[[ -S "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" ]] &&
     export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-fi
-
-#eval "$(op signin --account my)" && eval "$(op signin --account ambimax)"
