@@ -15,7 +15,7 @@ in
     nodejs                  # Node.js runtime
     pnpm                    # Package manager for JavaScript
     # Python runtime with pytest for running Python tests
-    (python312.withPackages (ps: with ps; [ pytest uv ]))
+    (python312.withPackages (ps: with ps; [ pytest pyyaml uv ]))
     typescript              # TypeScript compiler
     concurrently           # Run commands concurrently
     biome                  # JavaScript and TypeScript linter, formatter, and bundler
