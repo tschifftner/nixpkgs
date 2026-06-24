@@ -17,6 +17,7 @@ in {
     wget = "${pkgs.wget}/bin/wget";
 
     iCloud = "~/Library/Mobile\\ Documents/com~apple~CloudDocs";
+    md = "open -a Readdown";
 
     context = "source ~/.kube/kubectl-wrapper";
     kubectl = "context && ${profileBin}/kubectl $@";
