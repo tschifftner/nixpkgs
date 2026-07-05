@@ -46,3 +46,9 @@ account = "my.1password.com"
 item = "5nu3kxdyp2mxlv3zuhakvohph4"
 vault = "Private"
 account = "ambimax.1password.com"
+
+# Hetzner
+[[ssh-keys]]
+item = "wbhkllumtptnspenf25ggyf6ey"
+vault = "Private"
+account = "my.1password.com"

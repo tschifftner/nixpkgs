@@ -16,6 +16,7 @@
     ./packages.nix
     ./ssh.nix
     ./starship.nix
+    ./tmux.nix
     ./thunderbird.nix
     ./zsh.nix
   ];

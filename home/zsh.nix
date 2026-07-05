@@ -1,4 +1,9 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 {
   programs.zsh = {
@@ -63,6 +68,8 @@
       # End
       bindkey '\e[F'  end-of-line
       bindkey '\eOF'  end-of-line
+      # Delete
+      bindkey '\e[3~' delete-char
     '';
   };
 }
