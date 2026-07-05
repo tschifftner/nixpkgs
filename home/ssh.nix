@@ -9,12 +9,13 @@ let
   rotaryPubKey = readFile ./ssh/ambimax-rotary.pub;
   hetznerPubKey = readFile ./ssh/hetzner.pub;
   tsVpnKey = readFile ./ssh/ts-vpn.pub;
-in {
+in
+{
   programs.ssh.extraConfig = "Include config.d/*";
 
   home.file.".ssh/config.d/ts".text = ''
     # Hetzner defaults (shared config)
-    Host ws1 ws1-tunnel ws1-tty ws2-tty
+    Host ws1 ws1-tunnel ws1-tty
       User ts
       HostName 167.233.192.218
       IdentityFile ${writeText "hetzner.pub" hetznerPubKey}
