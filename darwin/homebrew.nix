@@ -1,4 +1,10 @@
-{ config, lib, pkgs, primaryUserDefaults, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  primaryUserDefaults,
+  ...
+}:
 
 let
   inherit (lib) mkIf elem;
@@ -8,7 +14,8 @@ let
   brewEnabled = config.homebrew.enable;
   homePackages = config.home-manager.users.${username}.home.packages;
 
-in {
+in
+{
   environment.shellInit = mkIf brewEnabled ''
     eval "$(${config.homebrew.prefix}/bin/brew shellenv)"
   '';
@@ -41,9 +48,10 @@ in {
   homebrew.onActivation.cleanup = "none";
   homebrew.global.brewfile = true;
 
+  # NOTE: homebrew/cask-fonts and homebrew/cask-versions were deprecated by
+  # Homebrew; all casks (fonts, versioned apps like visual-studio-code@insiders)
+  # were migrated into homebrew/cask.
   homebrew.taps = [
-    "homebrew/cask-fonts"
-    "homebrew/cask-versions"
     "homebrew/services"
     "nrlquaker/createzap"
   ];
@@ -62,47 +70,44 @@ in {
     "1password"
     "1password-cli"
     "calibre"
-    "cmux"                              # Terminal multiplexer (replaces ghostty)
-    "cursor"                            # AI-powered code editor
+    "cmux" # Terminal multiplexer (replaces ghostty)
+    "cursor" # AI-powered code editor
     "firefox"
     "google-drive"
     "google-chrome"
     "transmit"
     "moneymoney"
     "obsidian"
-    "tolaria"                           # Alternative to Obsidian
+    "tolaria" # Alternative to Obsidian
     "thunderbird"
     "whatsapp"
-    "visual-studio-code"                # Standard VS Code
-    "visual-studio-code@insiders"       # Latest VS Code Insiders build
+    "visual-studio-code" # Standard VS Code
+    "visual-studio-code@insiders" # Latest VS Code Insiders build
   ];
 
   # Configuration related to casks
-  home-manager.users.ts =
-    mkIf (caskPresent "1password-cli" && config ? home-manager) {
+  home-manager.users.ts = mkIf (caskPresent "1password-cli" && config ? home-manager) {
 
-      programs.ssh.enable = true;
-      programs.ssh.extraConfig = ''
-        # Only set `IdentityAgent` not connected remotely via SSH.
-        # This allows using agent forwarding when connecting remotely.
-        Match host * exec "test -z $SSH_TTY"
-          IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-      '';
-      home.shellAliases = {
-        # cachix = mkIf (elem pkgs.cachix homePackages) "op plugin run -- cachix";
-        gh =
-          mkIf (elem pkgs.gh homePackages) "op plugin run --account my -- gh";
-        nixpkgs-review = mkIf (elem pkgs.nixpkgs-review homePackages)
-          "op run -- nixpkgs-review";
-      };
-      home.sessionVariables = {
-        #GITHUB_TOKEN = "op://Private/d4kwckaojdngif365gyhukyfre/CLI/token";
-        #GITHUB_TOKEN = "op read op://Private/d4kwckaojdngif365gyhukyfre/CLI/token --account my";
-        # Flag indicating plugin aliases were sourced for compat scripts
-        OP_PLUGIN_ALIASES_SOURCED = "1";
-        OP_SESSION_TIMEOUT = "1800";
-      };
+    programs.ssh.enable = true;
+    programs.ssh.extraConfig = ''
+      # Only set `IdentityAgent` not connected remotely via SSH.
+      # This allows using agent forwarding when connecting remotely.
+      Match host * exec "test -z $SSH_TTY"
+        IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    '';
+    home.shellAliases = {
+      # cachix = mkIf (elem pkgs.cachix homePackages) "op plugin run -- cachix";
+      gh = mkIf (elem pkgs.gh homePackages) "op plugin run --account my -- gh";
+      nixpkgs-review = mkIf (elem pkgs.nixpkgs-review homePackages) "op run -- nixpkgs-review";
     };
+    home.sessionVariables = {
+      #GITHUB_TOKEN = "op://Private/d4kwckaojdngif365gyhukyfre/CLI/token";
+      #GITHUB_TOKEN = "op read op://Private/d4kwckaojdngif365gyhukyfre/CLI/token --account my";
+      # Flag indicating plugin aliases were sourced for compat scripts
+      OP_PLUGIN_ALIASES_SOURCED = "1";
+      OP_SESSION_TIMEOUT = "1800";
+    };
+  };
 
   # For cli packages that aren't currently available for macOS in `nixpkgs`.Packages should be
   # installed in `../home/default.nix` whenever possible.

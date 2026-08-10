@@ -51,7 +51,6 @@
       export DISABLE_BRACKETED_PASTE=1
       export POWERLEVEL9K_INSTANT_PROMPT=quiet
       export RTK_TELEMETRY_DISABLED=1
-      export PI_OFFLINE=1
     '';
 
     # Add nix
